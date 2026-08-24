@@ -1,4 +1,4 @@
 # Prevencion-De-LaInfluenza
-Sobre Infeccion Respiratoria
+Infeccion Respiratoria
 
-Innovacion Design Thinking
+Innovacion De Método Design Thinking
