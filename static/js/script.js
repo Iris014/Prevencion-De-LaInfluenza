@@ -6,15 +6,16 @@
     initTriage();
     if (page === "inicio") initAirCalc();
     if (page === "linea") {
-        initTimelineFilters(); // Filtros existentes
-        initScrollytelling(); // INJERTO: Scrollytelling
+        initCategoryFilters(); // INJERTO: Filtros dinámicos
+        initWebdevSidebar(); // INJERTO: Sidebar web.dev
+        initQuiz(); // INJERTO: Cuestionario web.dev
     }
     if (page === "guia") {
-        initMap(); // INJERTO: Mapa interactivo NYTimes
+        initMapNYTimes(); // INJERTO: Mapa interactivo NYTimes
         initBudget();
     }
     if (page === "mitos") {
-        initQuiz();
+        initQuizFlip(); // Trivia existente
         initMythForm();
     }
     
@@ -131,85 +132,106 @@
         });
     }
     
-    function initTimelineFilters() {
-        const items = [...document.querySelectorAll(".timeline-item")];
-        const chips = document.querySelectorAll("[data-filter]");
-        items.forEach((item) => {
-            const activate = () => {
-                items.forEach((el) => el.classList.remove("is-active"));
-                item.classList.add("is-active");
-            };
-            item.addEventListener("click", activate);
-            item.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    activate();
-                }
-            });
-        });
+    // ==========================================
+    // INJERTO: Filtros Dinámicos de Categoría
+    // ==========================================
+    function initCategoryFilters() {
+        const chips = document.querySelectorAll("[data-category]");
+        const eraBlocks = document.querySelectorAll(".era-block");
+        
         chips.forEach((chip) => {
             chip.addEventListener("click", () => {
+                const category = chip.dataset.category;
+                
+                // Actualizar estado visual de chips
                 chips.forEach((c) => c.classList.remove("is-on"));
                 chip.classList.add("is-on");
-                const f = chip.dataset.filter;
-                document.querySelectorAll("[data-topic]").forEach((p) => {
-                    p.hidden = f !== "all" && p.dataset.topic !== f;
-                });
-            });
-        });
-    }
-    
-    // ==========================================
-    // INJERTO: SCROLLYTELLING CINEMÁTICO (ArtVersion)
-    // ==========================================
-    function initScrollytelling() {
-        const eras = document.querySelectorAll('.timeline-trigger');
-        const mediaLayers = document.querySelectorAll('.media-layer');
-
-        if (eras.length > 0 && mediaLayers.length > 0) {
-            const scrollerObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const currentEra = entry.target.dataset.era;
-                        
-                        // Sincronizar clases de texto explicativo firme
-                        eras.forEach(e => e.classList.remove('active-era-text'));
-                        entry.target.classList.add('active-era-text');
-
-                        // Transición cruzada con desenfoque de movimiento en panel multimedia
-                        mediaLayers.forEach(layer => {
-                            layer.classList.remove('active');
-                            const video = layer.querySelector('video');
-                            if (video) {
-                                video.pause(); // Control estricto de hilos de video en segundo plano
-                                video.currentTime = 0;
-                            }
-                        });
-
-                        const targetMedia = document.getElementById(`media-${currentEra}`);
-                        if (targetMedia) {
-                            targetMedia.classList.add('active');
-                            const activeVideo = targetMedia.querySelector('video');
-                            if (activeVideo) {
-                                // Autoejecución asíncrona segura (Muted)
-                                activeVideo.play().catch(error => console.log("Autoplay mitigado por navegador"));
-                            }
+                
+                // Filtrar bloques con transición suave
+                eraBlocks.forEach((block) => {
+                    if (category === "all") {
+                        block.classList.remove("hidden");
+                    } else {
+                        const blockCategories = block.dataset.category;
+                        if (blockCategories && blockCategories.includes(category)) {
+                            block.classList.remove("hidden");
+                        } else {
+                            block.classList.add("hidden");
                         }
                     }
                 });
-            }, {
-                root: null,
-                threshold: 0.6 // Dispara la animación cuando el elemento ocupa el 60% de visualización
             });
-
-            eras.forEach(era => scrollerObserver.observe(era));
-        }
+        });
     }
     
     // ==========================================
-    // INJERTO: CARTOGRAFÍA SENSIBLE AL PUNTERO (Mapa - NYTimes)
+    // INJERTO: Sidebar web.dev con ScrollSync
     // ==========================================
-    function initMap() {
+    function initWebdevSidebar() {
+        const eraLinks = document.querySelectorAll(".era-link");
+        const eraBlocks = document.querySelectorAll(".era-block");
+        
+        eraLinks.forEach((link) => {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute("href").substring(1);
+                const targetBlock = document.getElementById(targetId);
+                if (targetBlock) {
+                    targetBlock.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            });
+        });
+        
+        // Sincronizar activación al scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const eraId = entry.target.id;
+                    eraLinks.forEach((link) => {
+                        link.classList.remove("active");
+                        if (link.getAttribute("href") === "#" + eraId) {
+                            link.classList.add("active");
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+        
+        eraBlocks.forEach((block) => observer.observe(block));
+    }
+    
+    // ==========================================
+    // INJERTO: Cuestionario web.dev
+    // ==========================================
+    function initQuiz() {
+        const options = document.querySelectorAll(".quiz-option");
+        const feedback = document.getElementById("quiz-feedback");
+        
+        options.forEach((option) => {
+            option.addEventListener("click", () => {
+                const isCorrect = option.dataset.correct === "true";
+                
+                // Limpiar clases previas
+                options.forEach((opt) => {
+                    opt.classList.remove("correct", "incorrect");
+                });
+                
+                // Aplicar resultado
+                option.classList.add(isCorrect ? "correct" : "incorrect");
+                
+                // Mostrar feedback
+                feedback.classList.remove("hidden");
+                feedback.classList.remove("success", "error");
+                feedback.classList.add(isCorrect ? "success" : "error");
+                feedback.textContent = isCorrect ? "¡Correcto! El Plan de Invierno se enfocó en mitigar la mortalidad infantil por neumonías e Influenza A." : "Vuelve a intentarlo. El Plan de Invierno no se centró en emisiones industriales ni vacunación masiva en esa época.";
+            });
+        });
+    }
+    
+    // ==========================================
+    // INJERTO: Mapa Interactivo NYTimes
+    // ==========================================
+    function initMapNYTimes() {
         const regions = document.querySelectorAll('.map-region-vector');
         const nytTooltip = document.getElementById('nyt-live-tooltip');
 
@@ -220,12 +242,7 @@
                     const positivity = vector.dataset.positivity;
                     const cobertura = vector.dataset.cobertura;
 
-                    // Modificar el filete neón instantáneo al pasar el cursor
-                    vector.style.fill = 'var(--bg-surface-elevated)';
-                    vector.style.stroke = 'var(--creative-violet)';
-                    vector.style.filter = 'drop-shadow(0 0 6px var(--creative-violet))';
-
-                    // Proyectar y calcular la persecución del Tooltip dinámico en ejes X/Y
+                    // Tooltip persigue al cursor con cálculo matemático
                     nytTooltip.classList.remove('hidden');
                     nytTooltip.style.left = `${e.offsetX + 15}px`;
                     nytTooltip.style.top = `${e.offsetY + 15}px`;
@@ -247,10 +264,6 @@
                 });
 
                 vector.addEventListener('mouseleave', () => {
-                    // Restablecer al estado corporativo sobrio de reposo
-                    vector.style.fill = 'var(--bg-surface)';
-                    vector.style.stroke = 'var(--tech-muted)';
-                    vector.style.filter = 'none';
                     nytTooltip.classList.add('hidden');
                 });
             });
@@ -292,7 +305,7 @@
         });
     }
     
-    function initQuiz() {
+    function initQuizFlip() {
         const cards = [
             {
                 q: "La vacuna contra la Influenza me enferma o me produce una gripe fuerte.",

@@ -29,7 +29,7 @@
   </div>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="../../index.html">
+      <a class="brand" href="../index.html">
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-text">Chile Respira</span>
       </a>
@@ -51,28 +51,45 @@
         infraestructura. Protocolo 3×3: 3 minutos, 3 momentos, 3 síntomas de alerta.</p>
     </section>
 
-    <!-- INJERTO: Mapa Interactivo NYTimes -->
+    <!-- Mapa Vectorial de Alta Precisión -->
     <section class="section map-section" aria-labelledby="mapa-titulo">
       <header class="section-head">
-        <h2 id="mapa-titulo">Mapa de cobertura: CESFAM, operativos y densidad de necesidad</h2>
-        <p>Base cartográfica institucional. El calor indica prioridad de acceso rural o demanda de vacunación. Desliza el puntero sobre las zonas críticas.</p>
+        <h2 id="mapa-titulo">Mapa epidemiológico de Chile</h2>
+        <p>División territorial epidemiológica con datos de positividad ISP y cobertura PNI. Desliza el puntero sobre las macrozonas.</p>
       </header>
       <div class="map-wrapper">
-        <svg id="chile-epidemiological-map" viewBox="0 0 600 400" class="raw-chart">
-          <!-- Macrozona Norte -->
-          <path d="M50,50 L250,50 L200,150 L50,150 Z" class="map-region-vector" data-name="Macrozona Norte (Antofagasta/Tarapacá)" data-positivity="14.2" data-cobertura="78.9"></path>
-          <!-- Macrozona Centro / RM -->
-          <path d="M200,150 L400,120 L350,280 L150,250 Z" class="map-region-vector" data-name="Región Metropolitana y Central" data-positivity="24.8" data-cobertura="87.2"></path>
-          <!-- Macrozona Sur / Rural -->
-          <path d="M150,250 L350,280 L300,380 L100,380 Z" class="map-region-vector" data-name="Macrozona Sur (Araucanía/Los Lagos)" data-positivity="19.5" data-cobertura="91.4"></path>
+        <svg id="chile-epidemiological-map" viewBox="0 0 400 600" class="raw-chart">
+          <!-- Fondo océano -->
+          <rect x="0" y="0" width="400" height="600" fill="#0B0F19"></rect>
+          
+          <!-- Macrozona Norte (Arica, Tarapacá, Antofagasta, Atacama, Coquimbo) -->
+          <path class="map-region-vector" 
+                d="M 120 20 L 180 25 L 175 80 L 160 130 L 140 150 L 130 200 L 110 220 L 100 270 L 85 320 L 70 370 L 65 420 L 60 480 L 55 540 L 50 580 L 30 570 L 25 520 L 30 460 L 40 400 L 50 340 L 60 280 L 70 220 L 80 160 L 90 100 L 110 70 L 120 20 Z"
+                data-name="Macrozona Norte" 
+                data-positivity="14.2" 
+                data-cobertura="78.9"></path>
+          
+          <!-- Macrozona Centro (Valparaíso, Metropolitana, O'Higgins, Maule) -->
+          <path class="map-region-vector" 
+                d="M 130 200 L 160 195 L 190 190 L 220 185 L 250 180 L 280 185 L 310 190 L 340 200 L 370 210 L 380 250 L 375 290 L 365 330 L 355 370 L 340 400 L 320 420 L 295 435 L 270 440 L 245 435 L 220 420 L 200 400 L 185 380 L 175 350 L 170 320 L 165 290 L 160 260 L 155 230 L 130 200 Z"
+                data-name="Macrozona Centro" 
+                data-positivity="24.8" 
+                data-cobertura="87.2"></path>
+          
+          <!-- Macrozona Sur (Biobío, Araucanía, Los Ríos, Los Lagos, Aysén, Magallanes) -->
+          <path class="map-region-vector" 
+                d="M 245 435 L 270 440 L 295 435 L 320 420 L 340 400 L 355 370 L 365 330 L 375 290 L 380 250 L 370 210 L 340 200 L 310 190 L 280 185 L 250 180 L 220 185 L 190 190 L 160 195 L 130 200 L 110 230 L 100 280 L 85 320 L 70 370 L 65 420 L 60 480 L 55 540 L 50 580 L 35 560 L 40 500 L 50 440 L 60 380 L 70 320 L 85 280 L 100 230 L 110 180 L 130 140 L 150 100 L 180 95 L 210 100 L 235 115 L 245 435 Z"
+                data-name="Macrozona Sur" 
+                data-positivity="19.5" 
+                data-cobertura="91.4"></path>
         </svg>
-        <!-- Tooltip que persigue al cursor (NYTimes style) -->
+        <!-- Tooltip Glassmorphism -->
         <div id="nyt-live-tooltip" class="nyt-tooltip hidden"></div>
       </div>
       <ul class="map-legend">
-        <li><span class="dot violet"></span> Operativo móvil / tráfico bajo</li>
-        <li><span class="dot coral"></span> CESFAM / tráfico medio</li>
-        <li><span class="dot orange"></span> Hub urbano / calor máximo</li>
+        <li><span class="dot violet"></span> Baja prioridad (14-15%)</li>
+        <li><span class="dot coral"></span> Media prioridad (19-25%)</li>
+        <li><span class="dot orange"></span> Alta prioridad (24-25%)</li>
       </ul>
     </section>
 
