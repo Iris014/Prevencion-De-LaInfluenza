@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Trivia Mitos vs Realidades sobre Influenza: vacuna, antibióticos, frío y cepas anuales. Fuentes MINSAL, ISP y OPS.">
+  <title>Mitos vs realidades | Chile Respira</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/script.js" defer></script>
+</head>
+
+<body data-page="mitos">
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+  <div class="a11y-bar" role="region" aria-label="Accesibilidad e inclusión">
+    <button type="button" class="a11y-btn" data-a11y="contrast">Modo alto contraste</button>
+    <div class="a11y-group" role="group" aria-label="Tamaño de texto">
+      <button type="button" class="a11y-btn" data-a11y="font-down">A−</button>
+      <button type="button" class="a11y-btn" data-a11y="font-up">A+</button>
+    </div>
+    <button type="button" class="a11y-btn" data-a11y="dyslexia" aria-pressed="false">Fuente para dislexia</button>
+    <button type="button" class="a11y-btn" data-a11y="speech" aria-pressed="false">Activar lector de voz</button>
+  </div>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="../../index.html">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text">Chile Respira</span>
+      </a>
+      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-principal">Menú</button>
+      <nav id="nav-principal" class="site-nav" aria-label="Principal">
+        <a href="../../index.html">Inicio</a>
+        <a href="linea-tiempo.html">Línea de tiempo</a>
+        <a href="guia-practica.html">Guía práctica</a>
+        <a href="mitos-realidades.html" aria-current="page">Mitos vs realidades</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <section class="hero hero-compact">
+      <p class="eyebrow">Desmintiendo la infodemia</p>
+      <h1>Mitos vs. realidades: pon a prueba lo que sabes</h1>
+      <p class="lead">Lee cada afirmación y elige Verdadero o Falso. La tarjeta gira con evidencia oficial. Al
+        completar, puedes obtener la insignia Embajador de Aire Limpio.</p>
+    </section>
+
+    <section class="section quiz-wrap">
+      <div class="progress-track" aria-hidden="true"><span class="progress-bar" id="quiz-barra"></span></div>
+      <p class="progress-label" id="quiz-progreso">Tarjeta 1 de 5</p>
+
+      <article class="flip-card" id="quiz-card">
+        <div class="flip-inner">
+          <div class="flip-face flip-front card">
+            <p class="status-badge">Trivia</p>
+            <h2 id="mito-afirmacion"></h2>
+            <div class="quiz-actions">
+              <button type="button" class="btn-secondary" data-answer="true">Verdadero</button>
+              <button type="button" class="btn-submit" data-answer="false">Falso</button>
+            </div>
+          </div>
+          <div class="flip-face flip-back card">
+            <p class="veredicto" id="mito-veredicto"></p>
+            <p id="mito-explicacion"></p>
+            <p class="source" id="mito-fuente"></p>
+            <p id="mito-accion"></p>
+            <div class="quiz-actions">
+              <a class="btn-secondary" id="share-wa" href="#" target="_blank" rel="noopener noreferrer">Compartir en
+                WhatsApp</a>
+              <button type="button" class="btn-submit" id="quiz-siguiente">Siguiente</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <div class="card card-tech" id="quiz-cierre" hidden>
+        <p class="status-badge">Nuevo</p>
+        <h2>Resultado de alfabetización sanitaria</h2>
+        <p id="quiz-score"></p>
+        <button type="button" class="btn-hero" id="btn-certificado">Generar certificado Embajador de Aire
+          Limpio</button>
+        <canvas id="certificado" width="900" height="520" hidden></canvas>
+        <a class="btn-secondary" id="descargar-cert" hidden download="embajador-aire-limpio.png">Descargar imagen</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Preguntas frecuentes</h2>
+      <div class="accordion">
+        <details>
+          <summary>¿La vacuna me da Influenza?</summary>
+          <p>No. El PNI usa virus inactivados o fracciones proteicas. Dolor local o febrícula es respuesta inmune, no
+            infección.</p>
+        </details>
+        <details>
+          <summary>¿Sirven los antibióticos al primer síntoma?</summary>
+          <p>No. La Influenza es viral. Solo un médico puede indicar antivirales (p. ej. Oseltamivir) en alto riesgo.
+          </p>
+        </details>
+        <details>
+          <summary>¿El frío causa el virus?</summary>
+          <p>No. El encierro sin ventilación concentra aerosoles. Ventilar diluye la carga viral.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="buzon-titulo">
+      <header class="section-head">
+        <h2 id="buzon-titulo">Buzón de mitos comunitarios</h2>
+        <p>Ingresa un rumor de tu entorno. Las dudas frecuentes se publican con evidencia.</p>
+      </header>
+      <form class="panel-form" id="form-mitos" novalidate>
+        <div class="field">
+          <label for="nombre">Nombre (opcional)</label>
+          <input class="input-field" id="nombre" name="nombre" type="text" maxlength="80" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="comuna">Comuna</label>
+          <input class="input-field" id="comuna" name="comuna" type="text" maxlength="80">
+        </div>
+        <div class="field field-full">
+          <label for="rumor">Mito o duda escuchada</label>
+          <textarea class="input-field" id="rumor" name="rumor" rows="4" required minlength="12"></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Enviar solicitud</button>
+        <p class="form-msg" id="form-mitos-msg" role="status"></p>
+      </form>
+    </section>
+
+
+  </main>
+
+  <button type="button" class="fab-triaje" data-open-triaje>¿Tienes síntomas hoy?</button>
+  <div class="modal" id="modal-triaje" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="triaje-titulo">
+      <button type="button" class="modal-close" data-close-modal aria-label="Cerrar">×</button>
+      <h2 id="triaje-titulo">Triaje rápido de orientación</h2>
+      <p>No sustituye atención médica. Salud Responde 600 360 7777.</p>
+      <fieldset class="triaje-options">
+        <legend>Selecciona lo que mejor describe tu situación</legend>
+        <label><input type="radio" name="triaje" value="critico"> Dificultad para respirar, tiraje o labios
+          azulados</label>
+        <label><input type="radio" name="triaje" value="moderado"> Fiebre &gt;38,5 °C + tos o dolor muscular</label>
+        <label><input type="radio" name="triaje" value="leve"> Molestias leves sin fiebre</label>
+      </fieldset>
+      <div id="triaje-resultado" class="card card-tech" hidden></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>Fuentes: MINSAL, ISP, SOCHINF, CDC, OPS/OMS.</p>
+      <ul class="footer-links">
+        <li><a href="https://www.minsal.cl" rel="noopener noreferrer" target="_blank">MINSAL</a></li>
+        <li><a href="https://www.ispch.cl" rel="noopener noreferrer" target="_blank">ISP</a></li>
+        <li><a href="https://www.sochinf.cl" rel="noopener noreferrer" target="_blank">SOCHINF</a></li>
+        <li><a href="https://www.cdc.gov" rel="noopener noreferrer" target="_blank">CDC</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+
+</html>
