@@ -1,21 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description"
-    content="Guía práctica de ventilación e higiene por recursos: rural $0 e institucional, con mapa de cobertura CESFAM.">
+  <meta name="description" content="Guía práctica de ventilación e higiene por recursos: rural $0 e institucional, con mapa de cobertura CESFAM.">
   <title>Guía práctica por recursos | Chile Respira</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@400;600;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/script.js" defer></script>
 </head>
-
 <body data-page="guia">
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
   <div class="a11y-bar" role="region" aria-label="Accesibilidad e inclusión">
@@ -29,13 +24,13 @@
   </div>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="../index.html">
+      <a class="brand" href="index.html">
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-text">Chile Respira</span>
       </a>
       <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-principal">Menú</button>
       <nav id="nav-principal" class="site-nav" aria-label="Principal">
-        <a href="../index.html">Inicio</a>
+        <a href="../../index.html">Inicio</a>
         <a href="linea-tiempo.html">Línea de tiempo</a>
         <a href="guia-practica.html" aria-current="page">Guía práctica</a>
         <a href="mitos-realidades.html">Mitos vs realidades</a>
@@ -47,49 +42,33 @@
     <section class="hero hero-compact">
       <p class="eyebrow">Prevención equitativa</p>
       <h1>Soluciones adaptables a todo presupuesto</h1>
-      <p class="lead">Medidas concretas contra contaminación intradomiciliaria y aerosoles, según recursos e
-        infraestructura. Protocolo 3×3: 3 minutos, 3 momentos, 3 síntomas de alerta.</p>
+      <p class="lead">Medidas concretas contra contaminación intradomiciliaria y aerosoles, según recursos e infraestructura. Protocolo 3×3: 3 minutos, 3 momentos, 3 síntomas de alerta.</p>
     </section>
 
-    <!-- Mapa Vectorial de Alta Precisión -->
     <section class="section map-section" aria-labelledby="mapa-titulo">
       <header class="section-head">
-        <h2 id="mapa-titulo">Mapa epidemiológico de Chile</h2>
-        <p>División territorial epidemiológica con datos de positividad ISP y cobertura PNI. Desliza el puntero sobre las macrozonas.</p>
+        <h2 id="mapa-titulo">Mapa de cobertura: CESFAM, operativos y densidad de necesidad</h2>
+        <p>Base cartográfica institucional. El calor indica prioridad de acceso rural o demanda de vacunación. Pulsa un nodo.</p>
       </header>
-      <div class="map-wrapper">
-        <svg id="chile-epidemiological-map" viewBox="0 0 400 600" class="raw-chart">
-          <!-- Fondo océano -->
-          <rect x="0" y="0" width="400" height="600" fill="#0B0F19"></rect>
-          
-          <!-- Macrozona Norte (Arica, Tarapacá, Antofagasta, Atacama, Coquimbo) -->
-          <path class="map-region-vector" 
-                d="M 120 20 L 180 25 L 175 80 L 160 130 L 140 150 L 130 200 L 110 220 L 100 270 L 85 320 L 70 370 L 65 420 L 60 480 L 55 540 L 50 580 L 30 570 L 25 520 L 30 460 L 40 400 L 50 340 L 60 280 L 70 220 L 80 160 L 90 100 L 110 70 L 120 20 Z"
-                data-name="Macrozona Norte" 
-                data-positivity="14.2" 
-                data-cobertura="78.9"></path>
-          
-          <!-- Macrozona Centro (Valparaíso, Metropolitana, O'Higgins, Maule) -->
-          <path class="map-region-vector" 
-                d="M 130 200 L 160 195 L 190 190 L 220 185 L 250 180 L 280 185 L 310 190 L 340 200 L 370 210 L 380 250 L 375 290 L 365 330 L 355 370 L 340 400 L 320 420 L 295 435 L 270 440 L 245 435 L 220 420 L 200 400 L 185 380 L 175 350 L 170 320 L 165 290 L 160 260 L 155 230 L 130 200 Z"
-                data-name="Macrozona Centro" 
-                data-positivity="24.8" 
-                data-cobertura="87.2"></path>
-          
-          <!-- Macrozona Sur (Biobío, Araucanía, Los Ríos, Los Lagos, Aysén, Magallanes) -->
-          <path class="map-region-vector" 
-                d="M 245 435 L 270 440 L 295 435 L 320 420 L 340 400 L 355 370 L 365 330 L 375 290 L 380 250 L 370 210 L 340 200 L 310 190 L 280 185 L 250 180 L 220 185 L 190 190 L 160 195 L 130 200 L 110 230 L 100 280 L 85 320 L 70 370 L 65 420 L 60 480 L 55 540 L 50 580 L 35 560 L 40 500 L 50 440 L 60 380 L 70 320 L 85 280 L 100 230 L 110 180 L 130 140 L 150 100 L 180 95 L 210 100 L 235 115 L 245 435 Z"
-                data-name="Macrozona Sur" 
-                data-positivity="19.5" 
-                data-cobertura="91.4"></path>
-        </svg>
-        <!-- Tooltip Glassmorphism -->
-        <div id="nyt-live-tooltip" class="nyt-tooltip hidden"></div>
+      <div class="map-layout">
+        <div class="map-canvas" role="img" aria-label="Esquema de Chile con puntos de cobertura">
+          <svg id="mapa-chile" viewBox="0 0 280 640" xmlns="http://www.w3.org/2000/svg">
+            <rect class="map-ocean" x="0" y="0" width="280" height="640"></rect>
+            <path class="map-land" d="M118 28 L152 42 L148 88 L158 130 L150 175 L162 220 L155 268 L168 318 L160 370 L172 418 L158 468 L148 510 L132 548 L128 590 L118 618 L108 590 L112 548 L98 500 L108 452 L102 400 L112 348 L108 300 L98 252 L108 200 L102 148 L112 98 L108 52 Z"></path>
+            <path class="map-border" d="M118 28 L152 42 L148 88 L158 130 L150 175 L162 220 L155 268 L168 318 L160 370 L172 418 L158 468 L148 510 L132 548 L128 590 L118 618 L108 590 L112 548 L98 500 L108 452 L102 400 L112 348 L108 300 L98 252 L108 200 L102 148 L112 98 L108 52 Z"></path>
+            <g id="map-hubs"></g>
+          </svg>
+        </div>
+        <aside class="map-panel card card-tech" id="map-detalle">
+          <p class="status-badge">Mapa</p>
+          <h3>Selecciona un nodo</h3>
+          <p>Los puntos violetas son tráfico bajo (operativos móviles). Coral: CESFAM y ferias. Naranja: hubs de máxima densidad urbana.</p>
+        </aside>
       </div>
       <ul class="map-legend">
-        <li><span class="dot violet"></span> Baja prioridad (14-15%)</li>
-        <li><span class="dot coral"></span> Media prioridad (19-25%)</li>
-        <li><span class="dot orange"></span> Alta prioridad (24-25%)</li>
+        <li><span class="dot violet"></span> Operativo móvil / tráfico bajo</li>
+        <li><span class="dot coral"></span> CESFAM / tráfico medio</li>
+        <li><span class="dot orange"></span> Hub urbano / calor máximo</li>
       </ul>
     </section>
 
@@ -101,23 +80,19 @@
       <div class="card-grid">
         <article class="card card-tech">
           <h3>Microventilación cruzada</h3>
-          <p>Abrir rendija de 5 cm en dos ventanas opuestas, 3 a 5 minutos cada 45–60 minutos. Renueva el aire sin
-            enfriar muros ni suelo.</p>
+          <p>Abrir rendija de 5 cm en dos ventanas opuestas, 3 a 5 minutos cada 45–60 minutos. Renueva el aire sin enfriar muros ni suelo.</p>
         </article>
         <article class="card card-tech">
           <h3>Humedad y combustión</h3>
-          <p>No secar ropa sobre estufas. Ventilar al cocinar. Humedad &​gt;60% y NO₂ de parafina facilitan la adhesión
-            del virus.</p>
+          <p>No secar ropa sobre estufas. Ventilar al cocinar. Humedad &gt;60% y NO₂ de parafina facilitan la adhesión del virus.</p>
         </article>
         <article class="card card-tech">
           <h3>Deflector casero</h3>
-          <p>Lámina de cartón o madera a 45° en la parte superior de la ventana ($0–$1.000 CLP). El aire frío sube al
-            techo antes de bajar.</p>
+          <p>Lámina de cartón o madera a 45° en la parte superior de la ventana ($0–$1.000 CLP). El aire frío sube al techo antes de bajar.</p>
         </article>
         <article class="card card-tech">
           <h3>Cloro diluido</h3>
-          <p>10 mL de cloro comercial por 1 L de agua fría (usar en 24 h). Inactiva la envoltura de Influenza en
-            manillas y mesas en &​lt;1 minuto. Nunca mezclar con amoniaco.</p>
+          <p>10 mL de cloro comercial por 1 L de agua fría (usar en 24 h). Inactiva la envoltura de Influenza en manillas y mesas en &lt;1 minuto. Nunca mezclar con amoniaco.</p>
         </article>
         <article class="card card-tech">
           <h3>Lavado de manos</h3>
@@ -138,8 +113,7 @@
         </article>
         <article class="card card-tech">
           <h3>Semáforo de CO₂</h3>
-          <p>Sensor NDIR $25.000–$60.000 CLP. Verde &​lt;700 ppm; amarillo 700–999 (ventilar 3 min); rojo &​gt;1000 (abrir
-            por completo).</p>
+          <p>Sensor NDIR $25.000–$60.000 CLP. Verde &lt;700 ppm; amarillo 700–999 (ventilar 3 min); rojo &gt;1000 (abrir por completo).</p>
         </article>
         <article class="card card-tech">
           <h3>Calefacción limpia</h3>
@@ -147,8 +121,7 @@
         </article>
         <article class="card card-tech">
           <h3>Higiene de accesos</h3>
-          <p>Alcohol gel 70% y dispensadores automáticos ($20.000–$40.000 CLP). Desinfección con amonio cuaternario
-            entre turnos.</p>
+          <p>Alcohol gel 70% y dispensadores automáticos ($20.000–$40.000 CLP). Desinfección con amonio cuaternario entre turnos.</p>
         </article>
       </div>
     </section>
@@ -165,31 +138,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Costo inicial</td>
-              <td>$0–$2.000 CLP</td>
-              <td>$40.000–$120.000 CLP</td>
-            </tr>
-            <tr>
-              <td>Implementación</td>
-              <td>&​lt; 10 minutos</td>
-              <td>1 a 3 días hábiles</td>
-            </tr>
-            <tr>
-              <td>Reducción estimada de carga viral</td>
-              <td>Hasta 60% con 3×3</td>
-              <td>Hasta 85% con CO₂ constante</td>
-            </tr>
-            <tr>
-              <td>Mantenimiento</td>
-              <td>Paños y cloro diario</td>
-              <td>Baterías/USB y recarga de gel</td>
-            </tr>
-            <tr>
-              <td>Monitoreo</td>
-              <td>Vaho en vidrios = ventilar</td>
-              <td>Alarma a 700 ppm</td>
-            </tr>
+            <tr><td>Costo inicial</td><td>$0–$2.000 CLP</td><td>$40.000–$120.000 CLP</td></tr>
+            <tr><td>Implementación</td><td>&lt; 10 minutos</td><td>1 a 3 días hábiles</td></tr>
+            <tr><td>Reducción estimada de carga viral</td><td>Hasta 60% con 3×3</td><td>Hasta 85% con CO₂ constante</td></tr>
+            <tr><td>Mantenimiento</td><td>Paños y cloro diario</td><td>Baterías/USB y recarga de gel</td></tr>
+            <tr><td>Monitoreo</td><td>Vaho en vidrios = ventilar</td><td>Alarma a 700 ppm</td></tr>
           </tbody>
         </table>
       </div>
@@ -219,8 +172,7 @@
       <ul>
         <li><strong>3 minutos:</strong> microventilación cruzada cada hora.</li>
         <li><strong>3 momentos:</strong> lavado al llegar, antes de comer y después de toser.</li>
-        <li><strong>3 alertas:</strong> fiebre &​gt;38,5 °C, dificultad para respirar, decaimiento extremo → SAPU/CESFAM.
-        </li>
+        <li><strong>3 alertas:</strong> fiebre &gt;38,5 °C, dificultad para respirar, decaimiento extremo → SAPU/CESFAM.</li>
       </ul>
       <p class="source">MINSAL · MINVU · Mineduc · OPS/OMS · SOCHINF</p>
     </section>
@@ -236,7 +188,7 @@
       <fieldset class="triaje-options">
         <legend>Selecciona lo que mejor describe tu situación</legend>
         <label><input type="radio" name="triaje" value="critico"> Dificultad para respirar, tiraje o labios azulados</label>
-        <label><input type="radio" name="triaje" value="moderado"> Fiebre &​gt;38,5 °C + tos o dolor muscular</label>
+        <label><input type="radio" name="triaje" value="moderado"> Fiebre &gt;38,5 °C + tos o dolor muscular</label>
         <label><input type="radio" name="triaje" value="leve"> Molestias leves sin fiebre</label>
       </fieldset>
       <div id="triaje-resultado" class="card card-tech" hidden></div>
@@ -254,5 +206,4 @@
     </div>
   </footer>
 </body>
-
 </html>

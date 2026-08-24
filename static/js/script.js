@@ -1,3 +1,4 @@
+
 (function () {
     const page = document.body.dataset.page;
     const html = document.documentElement;
@@ -5,20 +6,15 @@
     initNav();
     initTriage();
     if (page === "inicio") initAirCalc();
-    if (page === "linea") {
-        initCategoryFilters(); // INJERTO: Filtros dinámicos
-        initWebdevSidebar(); // INJERTO: Sidebar web.dev
-        initQuiz(); // INJERTO: Cuestionario web.dev
-    }
+    if (page === "linea") initTimeline();
     if (page === "guia") {
-        initMapNYTimes(); // INJERTO: Mapa interactivo NYTimes
+        initMap();
         initBudget();
     }
     if (page === "mitos") {
-        initQuizFlip(); // Trivia existente
+        initQuiz();
         initMythForm();
     }
-    
     function initA11y() {
         const stored = JSON.parse(localStorage.getItem("chile-respira-a11y") || "{}");
         if (stored.contrast) html.classList.add("contrast");
@@ -51,7 +47,6 @@
             });
         });
     }
-    
     function toggleSpeech(btn) {
         if (!window.speechSynthesis) return;
         if (speechSynthesis.speaking) {
@@ -64,7 +59,6 @@
         speechSynthesis.speak(utter);
         btn.setAttribute("aria-pressed", "true");
     }
-    
     function initNav() {
         const toggle = document.querySelector(".nav-toggle");
         const nav = document.getElementById("nav-principal");
@@ -74,7 +68,6 @@
             toggle.setAttribute("aria-expanded", String(open));
         });
     }
-    
     function initTriage() {
         const modal = document.getElementById("modal-triaje");
         if (!modal) return;
@@ -107,7 +100,6 @@
             if (e.key === "Escape") modal.hidden = true;
         });
     }
-    
     function initAirCalc() {
         const form = document.getElementById("form-aire");
         const box = document.getElementById("aire-resultado");
@@ -131,145 +123,98 @@
                 " minutos cada hora, rendija de 5 cm en ventanas opuestas. Si hay vaho o CO₂ > 700 ppm, ventila de inmediato.";
         });
     }
-    
-    // ==========================================
-    // INJERTO: Filtros Dinámicos de Categoría
-    // ==========================================
-    function initCategoryFilters() {
-        const chips = document.querySelectorAll("[data-category]");
-        const eraBlocks = document.querySelectorAll(".era-block");
-        
+    function initTimeline() {
+        const items = [...document.querySelectorAll(".timeline-item")];
+        const chips = document.querySelectorAll("[data-filter]");
+        items.forEach((item) => {
+            const activate = () => {
+                items.forEach((el) => el.classList.remove("is-active"));
+                item.classList.add("is-active");
+            };
+            item.addEventListener("click", activate);
+            item.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    activate();
+                }
+            });
+        });
         chips.forEach((chip) => {
             chip.addEventListener("click", () => {
-                const category = chip.dataset.category;
-                
-                // Actualizar estado visual de chips
                 chips.forEach((c) => c.classList.remove("is-on"));
                 chip.classList.add("is-on");
-                
-                // Filtrar bloques con transición suave
-                eraBlocks.forEach((block) => {
-                    if (category === "all") {
-                        block.classList.remove("hidden");
-                    } else {
-                        const blockCategories = block.dataset.category;
-                        if (blockCategories && blockCategories.includes(category)) {
-                            block.classList.remove("hidden");
-                        } else {
-                            block.classList.add("hidden");
-                        }
-                    }
+                const f = chip.dataset.filter;
+                document.querySelectorAll("[data-topic]").forEach((p) => {
+                    p.hidden = f !== "all" && p.dataset.topic !== f;
                 });
             });
         });
     }
-    
-    // ==========================================
-    // INJERTO: Sidebar web.dev con ScrollSync
-    // ==========================================
-    function initWebdevSidebar() {
-        const eraLinks = document.querySelectorAll(".era-link");
-        const eraBlocks = document.querySelectorAll(".era-block");
-        
-        eraLinks.forEach((link) => {
-            link.addEventListener("click", (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute("href").substring(1);
-                const targetBlock = document.getElementById(targetId);
-                if (targetBlock) {
-                    targetBlock.scrollIntoView({ behavior: "smooth", block: "start" });
+    function initMap() {
+        const hubs = [
+            { x: 132, y: 48, level: "low", name: "Arica", type: "Operativo móvil", hours: "Ferias locales · horario variable", heat: "Bajo" },
+            { x: 140, y: 118, level: "mid", name: "Antofagasta", type: "CESFAM urbano", hours: "Lun–Vie 08:00–17:00", heat: "Medio" },
+            { x: 122, y: 188, level: "mid", name: "La Serena", type: "CESFAM + feria", hours: "Lun–Sáb 08:00–14:00", heat: "Medio" },
+            { x: 118, y: 248, level: "high", name: "Valparaíso", type: "Hub regional", hours: "Red SAPU 24 h", heat: "Máximo" },
+            { x: 130, y: 268, level: "high", name: "Santiago", type: "Hub metropolitano", hours: "Vacunatorios DEIS / PNI", heat: "Máximo" },
+            { x: 128, y: 318, level: "mid", name: "Talca", type: "CESFAM", hours: "Lun–Vie 08:00–17:00", heat: "Medio" },
+            { x: 124, y: 368, level: "high", name: "Concepción", type: "Hub sur-centro", hours: "Hospital + CESFAM", heat: "Máximo" },
+            { x: 120, y: 418, level: "mid", name: "Temuco", type: "CESFAM + operativo rural", hours: "Móvil en ferias de fin de semana", heat: "Medio" },
+            { x: 118, y: 478, level: "low", name: "Puerto Montt", type: "Operativo costero", hours: "Consultorio y ronda isleña", heat: "Bajo" },
+            { x: 122, y: 575, level: "low", name: "Punta Arenas", type: "Punto austral", hours: "CESFAM Magallanes", heat: "Bajo" }
+        ];
+        const g = document.getElementById("map-hubs");
+        const panel = document.getElementById("map-detalle");
+        if (!g) return;
+        const flow = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        flow.setAttribute("class", "map-flow");
+        flow.setAttribute("d", "M130 268 C 90 300, 170 340, 124 368");
+        g.appendChild(flow);
+        hubs.forEach((hub) => {
+            if (hub.level === "high") {
+                const ring = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                ring.setAttribute("class", "hub-ring");
+                ring.setAttribute("cx", hub.x);
+                ring.setAttribute("cy", hub.y);
+                ring.setAttribute("r", "16");
+                g.appendChild(ring);
+            }
+            const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            c.setAttribute("class", "hub " + hub.level);
+            c.setAttribute("cx", hub.x);
+            c.setAttribute("cy", hub.y);
+            c.setAttribute("r", hub.level === "high" ? 8 : hub.level === "mid" ? 6 : 5);
+            c.setAttribute("tabindex", "0");
+            c.setAttribute("role", "button");
+            c.setAttribute("aria-label", hub.name);
+            const show = () => {
+                panel.innerHTML =
+                    '<p class="status-badge">' +
+                    hub.heat +
+                    "</p><h3>" +
+                    hub.name +
+                    "</h3><p>" +
+                    hub.type +
+                    "</p><p>Horario referencial: " +
+                    hub.hours +
+                    "</p><p>Consulta el CESFAM de tu comuna en la red MINSAL. Mapa esquemático, no GPS en tiempo real.</p>";
+            };
+            c.addEventListener("click", show);
+            c.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    show();
                 }
             });
-        });
-        
-        // Sincronizar activación al scroll
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    const eraId = entry.target.id;
-                    eraLinks.forEach((link) => {
-                        link.classList.remove("active");
-                        if (link.getAttribute("href") === "#" + eraId) {
-                            link.classList.add("active");
-                        }
-                    });
-                }
-            });
-        }, { threshold: 0.3 });
-        
-        eraBlocks.forEach((block) => observer.observe(block));
-    }
-    
-    // ==========================================
-    // INJERTO: Cuestionario web.dev
-    // ==========================================
-    function initQuiz() {
-        const options = document.querySelectorAll(".quiz-option");
-        const feedback = document.getElementById("quiz-feedback");
-        
-        options.forEach((option) => {
-            option.addEventListener("click", () => {
-                const isCorrect = option.dataset.correct === "true";
-                
-                // Limpiar clases previas
-                options.forEach((opt) => {
-                    opt.classList.remove("correct", "incorrect");
-                });
-                
-                // Aplicar resultado
-                option.classList.add(isCorrect ? "correct" : "incorrect");
-                
-                // Mostrar feedback
-                feedback.classList.remove("hidden");
-                feedback.classList.remove("success", "error");
-                feedback.classList.add(isCorrect ? "success" : "error");
-                feedback.textContent = isCorrect ? "¡Correcto! El Plan de Invierno se enfocó en mitigar la mortalidad infantil por neumonías e Influenza A." : "Vuelve a intentarlo. El Plan de Invierno no se centró en emisiones industriales ni vacunación masiva en esa época.";
-            });
+            g.appendChild(c);
+            const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            label.setAttribute("class", "geo-label");
+            label.setAttribute("x", hub.x + 10);
+            label.setAttribute("y", hub.y + 3);
+            label.textContent = hub.name;
+            g.appendChild(label);
         });
     }
-    
-    // ==========================================
-    // INJERTO: Mapa Interactivo NYTimes
-    // ==========================================
-    function initMapNYTimes() {
-        const regions = document.querySelectorAll('.map-region-vector');
-        const nytTooltip = document.getElementById('nyt-live-tooltip');
-
-        if (regions.length > 0 && nytTooltip) {
-            regions.forEach(vector => {
-                vector.addEventListener('mousemove', (e) => {
-                    const name = vector.dataset.name;
-                    const positivity = vector.dataset.positivity;
-                    const cobertura = vector.dataset.cobertura;
-
-                    // Tooltip persigue al cursor con cálculo matemático
-                    nytTooltip.classList.remove('hidden');
-                    nytTooltip.style.left = `${e.offsetX + 15}px`;
-                    nytTooltip.style.top = `${e.offsetY + 15}px`;
-
-                    nytTooltip.innerHTML = `
-                        <div style="font-size: 10px; color: var(--tech-cyan); font-weight: bold; letter-spacing: 1px;">📡 BOLETÍN EPIDEMIOLÓGICO DEIS</div>
-                        <div style="font-size: 14px; font-weight: bold; color: var(--text-title); margin: 4px 0 8px;">${name}</div>
-                        <div style="display: flex; gap: 15px; border-top: 1px solid var(--tech-muted); padding-top: 6px;">
-                            <div>
-                                <span style="font-size: 10px; color: var(--text-muted); display: block;">POSITIVIDAD ISP</span>
-                                <span style="font-size: 13px; font-weight: bold; color: var(--creative-coral);">${positivity}%</span>
-                            </div>
-                            <div>
-                                <span style="font-size: 10px; color: var(--text-muted); display: block;">COBERTURA PNI</span>
-                                <span style="font-size: 13px; font-weight: bold; color: var(--tech-cyan);">${cobertura}%</span>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                vector.addEventListener('mouseleave', () => {
-                    nytTooltip.classList.add('hidden');
-                });
-            });
-        }
-    }
-    
     function initBudget() {
         const form = document.getElementById("form-presupuesto");
         const out = document.getElementById("presupuesto-resultado");
@@ -304,8 +249,7 @@
             }
         });
     }
-    
-    function initQuizFlip() {
+    function initQuiz() {
         const cards = [
             {
                 q: "La vacuna contra la Influenza me enferma o me produce una gripe fuerte.",
@@ -367,14 +311,12 @@
         const share = document.getElementById("share-wa");
         const cierre = document.getElementById("quiz-cierre");
         const scoreEl = document.getElementById("quiz-score");
-        
         function render() {
             cardEl.classList.remove("is-flipped");
             qEl.textContent = cards[i].q;
             prog.textContent = "Tarjeta " + (i + 1) + " de " + cards.length;
             bar.style.width = ((i / cards.length) * 100 || 20) + "%";
         }
-        
         function reveal(userTrue) {
             const ok = userTrue === cards[i].answer;
             if (ok) score += 1;
@@ -386,11 +328,9 @@
                 "https://wa.me/?text=" + encodeURIComponent(cards[i].share + " " + location.href);
             cardEl.classList.add("is-flipped");
         }
-        
         document.querySelectorAll("[data-answer]").forEach((btn) => {
             btn.addEventListener("click", () => reveal(btn.dataset.answer === "true"));
         });
-        
         next.addEventListener("click", () => {
             i += 1;
             if (i >= cards.length) {
@@ -410,7 +350,6 @@
             }
             render();
         });
-        
         document.getElementById("btn-certificado").addEventListener("click", () => {
             const canvas = document.getElementById("certificado");
             const ctx = canvas.getContext("2d");
@@ -430,10 +369,8 @@
             link.hidden = false;
             link.href = canvas.toDataURL("image/png");
         });
-        
         render();
     }
-    
     function initMythForm() {
         const form = document.getElementById("form-mitos");
         if (!form) return;

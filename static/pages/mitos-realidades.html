@@ -1,21 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description"
-    content="Trivia Mitos vs Realidades sobre Influenza: vacuna, antibióticos, frío y cepas anuales. Fuentes MINSAL, ISP y OPS.">
+  <meta name="description" content="Trivia Mitos vs Realidades sobre Influenza: vacuna, antibióticos, frío y cepas anuales. Fuentes MINSAL, ISP y OPS.">
   <title>Mitos vs realidades | Chile Respira</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@400;600;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/script.js" defer></script>
 </head>
-
 <body data-page="mitos">
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
   <div class="a11y-bar" role="region" aria-label="Accesibilidad e inclusión">
@@ -29,7 +24,7 @@
   </div>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="../../index.html">
+      <a class="brand" href="index.html">
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-text">Chile Respira</span>
       </a>
@@ -47,8 +42,7 @@
     <section class="hero hero-compact">
       <p class="eyebrow">Desmintiendo la infodemia</p>
       <h1>Mitos vs. realidades: pon a prueba lo que sabes</h1>
-      <p class="lead">Lee cada afirmación y elige Verdadero o Falso. La tarjeta gira con evidencia oficial. Al
-        completar, puedes obtener la insignia Embajador de Aire Limpio.</p>
+      <p class="lead">Lee cada afirmación y elige Verdadero o Falso. La tarjeta gira con evidencia oficial. Al completar, puedes obtener la insignia Embajador de Aire Limpio.</p>
     </section>
 
     <section class="section quiz-wrap">
@@ -71,8 +65,7 @@
             <p class="source" id="mito-fuente"></p>
             <p id="mito-accion"></p>
             <div class="quiz-actions">
-              <a class="btn-secondary" id="share-wa" href="#" target="_blank" rel="noopener noreferrer">Compartir en
-                WhatsApp</a>
+              <a class="btn-secondary" id="share-wa" href="#" target="_blank" rel="noopener noreferrer">Compartir en WhatsApp</a>
               <button type="button" class="btn-submit" id="quiz-siguiente">Siguiente</button>
             </div>
           </div>
@@ -83,8 +76,7 @@
         <p class="status-badge">Nuevo</p>
         <h2>Resultado de alfabetización sanitaria</h2>
         <p id="quiz-score"></p>
-        <button type="button" class="btn-hero" id="btn-certificado">Generar certificado Embajador de Aire
-          Limpio</button>
+        <button type="button" class="btn-hero" id="btn-certificado">Generar certificado Embajador de Aire Limpio</button>
         <canvas id="certificado" width="900" height="520" hidden></canvas>
         <a class="btn-secondary" id="descargar-cert" hidden download="embajador-aire-limpio.png">Descargar imagen</a>
       </div>
@@ -95,13 +87,11 @@
       <div class="accordion">
         <details>
           <summary>¿La vacuna me da Influenza?</summary>
-          <p>No. El PNI usa virus inactivados o fracciones proteicas. Dolor local o febrícula es respuesta inmune, no
-            infección.</p>
+          <p>No. El PNI usa virus inactivados o fracciones proteicas. Dolor local o febrícula es respuesta inmune, no infección.</p>
         </details>
         <details>
           <summary>¿Sirven los antibióticos al primer síntoma?</summary>
-          <p>No. La Influenza es viral. Solo un médico puede indicar antivirales (p. ej. Oseltamivir) en alto riesgo.
-          </p>
+          <p>No. La Influenza es viral. Solo un médico puede indicar antivirales (p. ej. Oseltamivir) en alto riesgo.</p>
         </details>
         <details>
           <summary>¿El frío causa el virus?</summary>
@@ -132,8 +122,6 @@
         <p class="form-msg" id="form-mitos-msg" role="status"></p>
       </form>
     </section>
-
-
   </main>
 
   <button type="button" class="fab-triaje" data-open-triaje>¿Tienes síntomas hoy?</button>
@@ -145,8 +133,7 @@
       <p>No sustituye atención médica. Salud Responde 600 360 7777.</p>
       <fieldset class="triaje-options">
         <legend>Selecciona lo que mejor describe tu situación</legend>
-        <label><input type="radio" name="triaje" value="critico"> Dificultad para respirar, tiraje o labios
-          azulados</label>
+        <label><input type="radio" name="triaje" value="critico"> Dificultad para respirar, tiraje o labios azulados</label>
         <label><input type="radio" name="triaje" value="moderado"> Fiebre &gt;38,5 °C + tos o dolor muscular</label>
         <label><input type="radio" name="triaje" value="leve"> Molestias leves sin fiebre</label>
       </fieldset>
@@ -166,5 +153,4 @@
     </div>
   </footer>
 </body>
-
 </html>
