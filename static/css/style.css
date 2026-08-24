@@ -33,10 +33,11 @@
   --font: Inter, system-ui, sans-serif;
   --radius: 16px;
   --space-card: 2.5rem;
-  
-  /* 🎛️ Variables para componentes injertados */
-  --easing-cinematic: cubic-bezier(0.4, 0, 0.2, 1);
-  --nyt-tooltip-bg: rgba(30, 64, 175, 0.95);
+
+/* 🎛️ Variables para componentes injertados */
+--easing-cinematic: cubic-bezier(0.4, 0, 0.2, 1);
+--nyt-tooltip-bg: rgba(30, 64, 175, 0.95);
+--webdev-sidebar-width: 240px;
 }
 
 *,
@@ -897,4 +898,275 @@ th {
 :focus-visible {
   outline: 2px solid var(--tech-cyan);
   outline-offset: 3px;
+}
+
+
+.hidden {
+  display: none !important;
+}
+
+/* 🎨 ESTILOS WEBDEV - Estructura Bifásica */
+.webdev-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 900px) {
+  .webdev-layout {
+    grid-template-columns: var(--webdev-sidebar-width) 1fr;
+  }
+}
+
+.timeline-sidebar {
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.era-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.era-link {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text-body);
+  background: var(--bg-surface);
+  border: 1px solid var(--tech-muted);
+  transition: all 0.3s var(--easing-cinematic);
+}
+
+.era-link:hover,
+.era-link.active {
+  background: var(--creative-violet-alpha);
+  border-color: var(--creative-violet);
+}
+
+.era-link.active {
+  border-left: 4px solid var(--creative-violet);
+}
+
+.era-year {
+  font-size: 0.85rem;
+  color: var(--tech-cyan);
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.era-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.content-canvas {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.era-block {
+  scroll-margin-top: 100px;
+  opacity: 1;
+  transition: opacity 0.3s var(--easing-cinematic);
+}
+
+.era-block.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.content-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .content-split {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.content-main h3,
+.content-impact h3 {
+  font-size: 1.1rem;
+  color: var(--tech-cyan);
+  margin-bottom: 0.75rem;
+}
+
+.content-impact {
+  background: var(--bg-surface);
+  border: 1px solid var(--tech-muted);
+  border-left: 4px solid var(--creative-coral);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+/* 🎨 ESTILOS WEBDEV - Cuestionario */
+.quiz-module {
+  background: var(--bg-surface);
+  border: 1px solid var(--tech-muted);
+  border-radius: var(--radius);
+  padding: var(--space-card);
+  margin-top: 3rem;
+}
+
+.quiz-question {
+  margin-bottom: 1.5rem;
+}
+
+.question-text {
+  font-size: 1.1rem;
+  color: var(--text-body);
+  margin-bottom: 1rem;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.quiz-option {
+  font: inherit;
+  cursor: pointer;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--tech-muted);
+  background: var(--bg-surface-elevated);
+  color: var(--text-body);
+  border-radius: 8px;
+  text-align: left;
+  transition: all 0.3s var(--easing-cinematic);
+}
+
+.quiz-option:hover {
+  border-color: var(--tech-cyan);
+  background: var(--creative-violet-alpha);
+}
+
+.quiz-option.correct {
+  border-color: #10B981;
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+}
+
+.quiz-option.incorrect {
+  border-color: var(--creative-coral);
+  background: var(--creative-orange-alpha);
+  color: var(--creative-coral);
+}
+
+.quiz-feedback {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.quiz-feedback.success {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+}
+
+.quiz-feedback.error {
+  background: var(--creative-orange-alpha);
+  color: var(--creative-coral);
+}
+
+/* 🎨 ESTILOS MAPA LAYOUT FUSIONADO */
+.map-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 340px) 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.map-canvas {
+  background: var(--bg-main);
+  border: 1px solid var(--tech-muted);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+}
+
+.map-ocean {
+  fill: var(--bg-main);
+}
+
+.map-land {
+  fill: var(--bg-surface);
+}
+
+.map-border {
+  fill: none;
+  stroke: var(--tech-muted);
+  stroke-width: 1.2;
+}
+
+.hub {
+  cursor: pointer;
+}
+
+.hub.low { fill: var(--creative-violet); }
+.hub.mid { fill: var(--creative-coral); }
+.hub.high {
+  fill: var(--creative-orange);
+  filter: drop-shadow(0 0 8px var(--creative-coral-glow));
+}
+
+.hub-ring {
+  fill: none;
+  stroke: var(--creative-coral);
+  stroke-width: 2;
+  opacity: 0.45;
+}
+
+.map-flow {
+  fill: none;
+  stroke: var(--creative-coral);
+  stroke-width: 1.4;
+  stroke-dasharray: 6 8;
+  animation: dash 8s linear infinite;
+}
+
+@keyframes dash {
+  to { stroke-dashoffset: -80; }
+}
+
+.geo-label {
+  fill: var(--text-muted);
+  font-size: 9px;
+  font-family: var(--font);
+}
+
+@media (max-width: 800px) {
+  .nav-toggle { display: inline-flex; }
+  .site-nav {
+    display: none;
+    position: absolute;
+    right: 1.25rem;
+    top: 4.2rem;
+    flex-direction: column;
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--tech-muted);
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  .site-nav.is-open { display: flex; }
+  .map-layout { grid-template-columns: 1fr; }
+  .timeline-cinematic-container { grid-template-columns: 1fr; }
+  .timeline-sticky-panel { display: none; }
+  .webdev-layout { grid-template-columns: 1fr; }
+  .timeline-sidebar { display: none; }
+  .content-split { grid-template-columns: 1fr; }
 }
