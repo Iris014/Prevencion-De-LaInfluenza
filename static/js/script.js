@@ -1,4 +1,3 @@
-
 (function () {
     const page = document.body.dataset.page;
     const html = document.documentElement;
@@ -6,15 +5,19 @@
     initNav();
     initTriage();
     if (page === "inicio") initAirCalc();
-    if (page === "linea") initTimeline();
+    if (page === "linea") {
+        initTimelineFilters(); // Filtros existentes
+        initScrollytelling(); // INJERTO: Scrollytelling
+    }
     if (page === "guia") {
-        initMap();
+        initMap(); // INJERTO: Mapa interactivo NYTimes
         initBudget();
     }
     if (page === "mitos") {
         initQuiz();
         initMythForm();
     }
+    
     function initA11y() {
         const stored = JSON.parse(localStorage.getItem("chile-respira-a11y") || "{}");
         if (stored.contrast) html.classList.add("contrast");
@@ -47,6 +50,7 @@
             });
         });
     }
+    
     function toggleSpeech(btn) {
         if (!window.speechSynthesis) return;
         if (speechSynthesis.speaking) {
@@ -59,6 +63,7 @@
         speechSynthesis.speak(utter);
         btn.setAttribute("aria-pressed", "true");
     }
+    
     function initNav() {
         const toggle = document.querySelector(".nav-toggle");
         const nav = document.getElementById("nav-principal");
@@ -68,6 +73,7 @@
             toggle.setAttribute("aria-expanded", String(open));
         });
     }
+    
     function initTriage() {
         const modal = document.getElementById("modal-triaje");
         if (!modal) return;
@@ -100,6 +106,7 @@
             if (e.key === "Escape") modal.hidden = true;
         });
     }
+    
     function initAirCalc() {
         const form = document.getElementById("form-aire");
         const box = document.getElementById("aire-resultado");
@@ -123,7 +130,8 @@
                 " minutos cada hora, rendija de 5 cm en ventanas opuestas. Si hay vaho o CO₂ > 700 ppm, ventila de inmediato.";
         });
     }
-    function initTimeline() {
+    
+    function initTimelineFilters() {
         const items = [...document.querySelectorAll(".timeline-item")];
         const chips = document.querySelectorAll("[data-filter]");
         items.forEach((item) => {
@@ -150,71 +158,105 @@
             });
         });
     }
-    function initMap() {
-        const hubs = [
-            { x: 132, y: 48, level: "low", name: "Arica", type: "Operativo móvil", hours: "Ferias locales · horario variable", heat: "Bajo" },
-            { x: 140, y: 118, level: "mid", name: "Antofagasta", type: "CESFAM urbano", hours: "Lun–Vie 08:00–17:00", heat: "Medio" },
-            { x: 122, y: 188, level: "mid", name: "La Serena", type: "CESFAM + feria", hours: "Lun–Sáb 08:00–14:00", heat: "Medio" },
-            { x: 118, y: 248, level: "high", name: "Valparaíso", type: "Hub regional", hours: "Red SAPU 24 h", heat: "Máximo" },
-            { x: 130, y: 268, level: "high", name: "Santiago", type: "Hub metropolitano", hours: "Vacunatorios DEIS / PNI", heat: "Máximo" },
-            { x: 128, y: 318, level: "mid", name: "Talca", type: "CESFAM", hours: "Lun–Vie 08:00–17:00", heat: "Medio" },
-            { x: 124, y: 368, level: "high", name: "Concepción", type: "Hub sur-centro", hours: "Hospital + CESFAM", heat: "Máximo" },
-            { x: 120, y: 418, level: "mid", name: "Temuco", type: "CESFAM + operativo rural", hours: "Móvil en ferias de fin de semana", heat: "Medio" },
-            { x: 118, y: 478, level: "low", name: "Puerto Montt", type: "Operativo costero", hours: "Consultorio y ronda isleña", heat: "Bajo" },
-            { x: 122, y: 575, level: "low", name: "Punta Arenas", type: "Punto austral", hours: "CESFAM Magallanes", heat: "Bajo" }
-        ];
-        const g = document.getElementById("map-hubs");
-        const panel = document.getElementById("map-detalle");
-        if (!g) return;
-        const flow = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        flow.setAttribute("class", "map-flow");
-        flow.setAttribute("d", "M130 268 C 90 300, 170 340, 124 368");
-        g.appendChild(flow);
-        hubs.forEach((hub) => {
-            if (hub.level === "high") {
-                const ring = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                ring.setAttribute("class", "hub-ring");
-                ring.setAttribute("cx", hub.x);
-                ring.setAttribute("cy", hub.y);
-                ring.setAttribute("r", "16");
-                g.appendChild(ring);
-            }
-            const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            c.setAttribute("class", "hub " + hub.level);
-            c.setAttribute("cx", hub.x);
-            c.setAttribute("cy", hub.y);
-            c.setAttribute("r", hub.level === "high" ? 8 : hub.level === "mid" ? 6 : 5);
-            c.setAttribute("tabindex", "0");
-            c.setAttribute("role", "button");
-            c.setAttribute("aria-label", hub.name);
-            const show = () => {
-                panel.innerHTML =
-                    '<p class="status-badge">' +
-                    hub.heat +
-                    "</p><h3>" +
-                    hub.name +
-                    "</h3><p>" +
-                    hub.type +
-                    "</p><p>Horario referencial: " +
-                    hub.hours +
-                    "</p><p>Consulta el CESFAM de tu comuna en la red MINSAL. Mapa esquemático, no GPS en tiempo real.</p>";
-            };
-            c.addEventListener("click", show);
-            c.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    show();
-                }
+    
+    // ==========================================
+    // INJERTO: SCROLLYTELLING CINEMÁTICO (ArtVersion)
+    // ==========================================
+    function initScrollytelling() {
+        const eras = document.querySelectorAll('.timeline-trigger');
+        const mediaLayers = document.querySelectorAll('.media-layer');
+
+        if (eras.length > 0 && mediaLayers.length > 0) {
+            const scrollerObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const currentEra = entry.target.dataset.era;
+                        
+                        // Sincronizar clases de texto explicativo firme
+                        eras.forEach(e => e.classList.remove('active-era-text'));
+                        entry.target.classList.add('active-era-text');
+
+                        // Transición cruzada con desenfoque de movimiento en panel multimedia
+                        mediaLayers.forEach(layer => {
+                            layer.classList.remove('active');
+                            const video = layer.querySelector('video');
+                            if (video) {
+                                video.pause(); // Control estricto de hilos de video en segundo plano
+                                video.currentTime = 0;
+                            }
+                        });
+
+                        const targetMedia = document.getElementById(`media-${currentEra}`);
+                        if (targetMedia) {
+                            targetMedia.classList.add('active');
+                            const activeVideo = targetMedia.querySelector('video');
+                            if (activeVideo) {
+                                // Autoejecución asíncrona segura (Muted)
+                                activeVideo.play().catch(error => console.log("Autoplay mitigado por navegador"));
+                            }
+                        }
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.6 // Dispara la animación cuando el elemento ocupa el 60% de visualización
             });
-            g.appendChild(c);
-            const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            label.setAttribute("class", "geo-label");
-            label.setAttribute("x", hub.x + 10);
-            label.setAttribute("y", hub.y + 3);
-            label.textContent = hub.name;
-            g.appendChild(label);
-        });
+
+            eras.forEach(era => scrollerObserver.observe(era));
+        }
     }
+    
+    // ==========================================
+    // INJERTO: CARTOGRAFÍA SENSIBLE AL PUNTERO (Mapa - NYTimes)
+    // ==========================================
+    function initMap() {
+        const regions = document.querySelectorAll('.map-region-vector');
+        const nytTooltip = document.getElementById('nyt-live-tooltip');
+
+        if (regions.length > 0 && nytTooltip) {
+            regions.forEach(vector => {
+                vector.addEventListener('mousemove', (e) => {
+                    const name = vector.dataset.name;
+                    const positivity = vector.dataset.positivity;
+                    const cobertura = vector.dataset.cobertura;
+
+                    // Modificar el filete neón instantáneo al pasar el cursor
+                    vector.style.fill = 'var(--bg-surface-elevated)';
+                    vector.style.stroke = 'var(--creative-violet)';
+                    vector.style.filter = 'drop-shadow(0 0 6px var(--creative-violet))';
+
+                    // Proyectar y calcular la persecución del Tooltip dinámico en ejes X/Y
+                    nytTooltip.classList.remove('hidden');
+                    nytTooltip.style.left = `${e.offsetX + 15}px`;
+                    nytTooltip.style.top = `${e.offsetY + 15}px`;
+
+                    nytTooltip.innerHTML = `
+                        <div style="font-size: 10px; color: var(--tech-cyan); font-weight: bold; letter-spacing: 1px;">📡 BOLETÍN EPIDEMIOLÓGICO DEIS</div>
+                        <div style="font-size: 14px; font-weight: bold; color: var(--text-title); margin: 4px 0 8px;">${name}</div>
+                        <div style="display: flex; gap: 15px; border-top: 1px solid var(--tech-muted); padding-top: 6px;">
+                            <div>
+                                <span style="font-size: 10px; color: var(--text-muted); display: block;">POSITIVIDAD ISP</span>
+                                <span style="font-size: 13px; font-weight: bold; color: var(--creative-coral);">${positivity}%</span>
+                            </div>
+                            <div>
+                                <span style="font-size: 10px; color: var(--text-muted); display: block;">COBERTURA PNI</span>
+                                <span style="font-size: 13px; font-weight: bold; color: var(--tech-cyan);">${cobertura}%</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                vector.addEventListener('mouseleave', () => {
+                    // Restablecer al estado corporativo sobrio de reposo
+                    vector.style.fill = 'var(--bg-surface)';
+                    vector.style.stroke = 'var(--tech-muted)';
+                    vector.style.filter = 'none';
+                    nytTooltip.classList.add('hidden');
+                });
+            });
+        }
+    }
+    
     function initBudget() {
         const form = document.getElementById("form-presupuesto");
         const out = document.getElementById("presupuesto-resultado");
@@ -249,6 +291,7 @@
             }
         });
     }
+    
     function initQuiz() {
         const cards = [
             {
@@ -311,12 +354,14 @@
         const share = document.getElementById("share-wa");
         const cierre = document.getElementById("quiz-cierre");
         const scoreEl = document.getElementById("quiz-score");
+        
         function render() {
             cardEl.classList.remove("is-flipped");
             qEl.textContent = cards[i].q;
             prog.textContent = "Tarjeta " + (i + 1) + " de " + cards.length;
             bar.style.width = ((i / cards.length) * 100 || 20) + "%";
         }
+        
         function reveal(userTrue) {
             const ok = userTrue === cards[i].answer;
             if (ok) score += 1;
@@ -328,9 +373,11 @@
                 "https://wa.me/?text=" + encodeURIComponent(cards[i].share + " " + location.href);
             cardEl.classList.add("is-flipped");
         }
+        
         document.querySelectorAll("[data-answer]").forEach((btn) => {
             btn.addEventListener("click", () => reveal(btn.dataset.answer === "true"));
         });
+        
         next.addEventListener("click", () => {
             i += 1;
             if (i >= cards.length) {
@@ -350,6 +397,7 @@
             }
             render();
         });
+        
         document.getElementById("btn-certificado").addEventListener("click", () => {
             const canvas = document.getElementById("certificado");
             const ctx = canvas.getContext("2d");
@@ -369,8 +417,10 @@
             link.hidden = false;
             link.href = canvas.toDataURL("image/png");
         });
+        
         render();
     }
+    
     function initMythForm() {
         const form = document.getElementById("form-mitos");
         if (!form) return;
