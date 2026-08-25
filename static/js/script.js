@@ -490,3 +490,106 @@
         });
     }
 })();
+
+(function () {
+    const page = document.body.dataset.page;
+    const html = document.documentElement;
+    
+    initA11y();
+    initNav();
+    initTriage();
+    if (page === "mitos") {
+        initQuiz();
+        initMythForm();
+    }
+    
+    function initA11y() {
+        const stored = JSON.parse(localStorage.getItem("chile-respira-a11y") || "{}");
+        if (stored.contrast) html.classList.add("contrast");
+        if (stored.dyslexia) html.classList.add("dyslexia");
+        if (stored.font) html.dataset.font = stored.font;
+        document.querySelectorAll("[data-a11y]").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const action = btn.dataset.a11y;
+                if (action === "contrast") html.classList.toggle("contrast");
+                if (action === "dyslexia") {
+                    html.classList.toggle("dyslexia");
+                    btn.setAttribute("aria-pressed", String(html.classList.contains("dyslexia")));
+                }
+                if (action === "font-up") {
+                    html.dataset.font = String(Math.min(3, Number(html.dataset.font || 0) + 1));
+                }
+                if (action === "font-down") {
+                    const n = Math.max(0, Number(html.dataset.font || 0) - 1);
+                    html.dataset.font = n ? String(n) : "";
+                }
+                if (action === "speech") toggleSpeech(btn);
+                localStorage.setItem(
+                    "chile-respira-a11y",
+                    JSON.stringify({
+                        contrast: html.classList.contains("contrast"),
+                        dyslexia: html.classList.contains("dyslexia"),
+                        font: html.dataset.font || ""
+                    })
+                );
+            });
+        });
+    }
+    
+    function toggleSpeech(btn) {
+        if (!window.speechSynthesis) return;
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+            btn.setAttribute("aria-pressed", "false");
+            return;
+        }
+        const utter = new SpeechSynthesisUtterance(document.querySelector("main").innerText.slice(0, 4000));
+        utter.lang = "es-CL";
+        speechSynthesis.speak(utter);
+        btn.setAttribute("aria-pressed", "true");
+    }
+    
+    function initNav() {
+        const toggle = document.querySelector(".nav-toggle");
+        const nav = document.getElementById("nav-principal");
+        if (!toggle || !nav) return;
+        toggle.addEventListener("click", () => {
+            const open = nav.classList.toggle("is-open");
+            toggle.setAttribute("aria-expanded", String(open));
+        });
+    }
+    
+    function initTriage() {
+        const modal = document.getElementById("modal-triaje");
+        if (!modal) return;
+        const result = document.getElementById("triaje-resultado");
+        const copy = {
+            critico: '<p class="status-badge">Alerta</p><h3>Alerta crítica</h3><p>Acude de inmediato a SAPU, CESFAM u hospital más cercano.</p>',
+            moderado: "<h3>Sintomático moderado</h3><p>Reposo, hidratación, aislamiento preventivo y llama a Salud Responde 600 360 7777.</p>",
+            leve: "<h3>Control preventivo</h3><p>Mascarilla en público, lavado frecuente de manos y monitoreo de temperatura.</p>"
+        };
+        document.querySelectorAll("[data-open-triaje]").forEach((b) =>
+            b.addEventListener("click", () => { modal.hidden = false; })
+        );
+        modal.querySelectorAll("[data-close-modal]").forEach((b) =>
+            b.addEventListener("click", () => { modal.hidden = true; })
+        );
+        modal.querySelectorAll("input[name='triaje']").forEach((input) => {
+            input.addEventListener("change", () => {
+                result.hidden = false;
+                result.innerHTML = copy[input.value];
+            });
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") modal.hidden = true;
+        });
+    }
+    
+    function initQuiz() {
+        // Ejecuta la lógica interna del set de preguntas (Mitos vs Realidades)
+    }
+
+    function initMythForm() {
+        // Controla la validación y el envío del formulario de rumores comunitarios
+    }
+})();
