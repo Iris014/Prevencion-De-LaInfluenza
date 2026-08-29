@@ -171,31 +171,60 @@
         triggers.forEach((trigger) => observer.observe(trigger));
     }
     
-    // ==========================================
+// ==========================================
     // INJERTO: Filtros Dinámicos de Categoría
     // ==========================================
     function initCategoryFilters() {
-        const chips = document.querySelectorAll("[data-category]");
-        const eraBlocks = document.querySelectorAll(".era-block");
+        // Seleccionamos específicamente los botones de la barra de filtros
+        const filterChips = document.querySelectorAll(".filter-bar .chip");
         
-        chips.forEach((chip) => {
+        // Seleccionamos todos los elementos que deben reaccionar al filtro
+        const eraBlocks = document.querySelectorAll(".era-block");
+        const timelineTriggers = document.querySelectorAll(".timeline-trigger");
+        const eraLinks = document.querySelectorAll(".era-link");
+        
+        if (filterChips.length === 0) return;
+
+        filterChips.forEach((chip) => {
             chip.addEventListener("click", () => {
                 const category = chip.dataset.category;
                 
-                // Actualizar estado visual de chips
-                chips.forEach((c) => c.classList.remove("is-on"));
+                // 1. Actualizar estado visual de los botones (chips)
+                filterChips.forEach((c) => c.classList.remove("is-on"));
                 chip.classList.add("is-on");
                 
-                // Filtrar bloques con transición suave
-                eraBlocks.forEach((block) => {
-                    if (category === "all") {
-                        block.classList.remove("hidden");
-                    } else {
-                        const blockCategories = block.dataset.category;
-                        if (blockCategories && blockCategories.includes(category)) {
-                            block.classList.remove("hidden");
+                // Función reutilizable para mostrar/ocultar elementos
+                const toggleVisibility = (elements) => {
+                    elements.forEach((el) => {
+                        // Soportar data-category o data-topic
+                        const itemCategories = el.dataset.category || el.dataset.topic || "";
+                        
+                        if (category === "all" || itemCategories.includes(category)) {
+                            el.classList.remove("hidden");
+                            el.style.display = ""; // Asegurar visibilidad
                         } else {
-                            block.classList.add("hidden");
+                            el.classList.add("hidden");
+                            el.style.display = "none"; // Ocultar
+                        }
+                    });
+                };
+
+                // 2. Filtrar la vista Cinemática (Triggers de la izquierda)
+                toggleVisibility(timelineTriggers);
+
+                // 3. Filtrar la vista Web.dev (Bloques de lectura detallada)
+                toggleVisibility(eraBlocks);
+
+                // 4. Sincronizar el menú lateral (Sidebar) para no mostrar enlaces a bloques ocultos
+                eraLinks.forEach((link) => {
+                    const targetId = link.getAttribute("href").substring(1);
+                    const targetBlock = document.getElementById(targetId);
+                    if (targetBlock) {
+                        const blockCategories = targetBlock.dataset.category || "";
+                        if (category === "all" || blockCategories.includes(category)) {
+                            link.style.display = "";
+                        } else {
+                            link.style.display = "none";
                         }
                     }
                 });

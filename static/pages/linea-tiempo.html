@@ -61,33 +61,34 @@
     <!-- PRIMERA PARTE: Scrollytelling Cinemático Minimalista -->
     <div class="timeline-cinematic-container">
       <!-- Columna Izquierda: Flujo Tipográfico Centrado -->
+<!-- Columna Izquierda: Flujo Tipográfico Centrado (Cinemático) -->
       <div class="timeline-scroller">
-        <section class="timeline-trigger" data-era="era90">
+        <!-- Era 90: Infraestructura -->
+        <section class="timeline-trigger" data-era="era90" data-category="infra">
           <span class="timeline-era-label">1990 – 1999</span>
           <h2>Contaminación intradomiciliaria y el Plan de Invierno</h2>
-          <p class="text-body-muted">Crisis respiratorias pediátricas agudas motivan el nacimiento de la estrategia
-            fiscal en Chile, combatiendo la contaminación de estufas a parafina de mecha.</p>
+          <p class="text-body-muted">Crisis respiratorias pediátricas agudas motivan el nacimiento de la estrategia fiscal en Chile, combatiendo la contaminación de estufas a parafina de mecha.</p>
         </section>
-
-        <section class="timeline-trigger" data-era="era2000">
+        
+        <!-- Era 2000: Salud -->
+        <section class="timeline-trigger" data-era="era2000" data-category="salud">
           <span class="timeline-era-label">2000 – 2009</span>
-          <h2>Pandemia A(H1N1)</h2>
-          <p class="text-body-muted">Reestructuración masiva de la red de salud primaria SAPU y despliegue del antiviral
-            estratégico Oseltamivir frente al brote virológico global.</p>
+          <h2>Pandemia A (H1N1)</h2>
+          <p class="text-body-muted">Reestructuración masiva de la red de salud primaria SAPU y despliegue del antiviral estratégico Oseltamivir frente al brote virológico global.</p>
         </section>
 
-        <section class="timeline-trigger" data-era="era2010">
+        <!-- Era 2010: Escuela -->
+        <section class="timeline-trigger" data-era="era2010" data-category="escuela">
           <span class="timeline-era-label">2010 – 2019</span>
           <h2>Plan de Descontaminación Atmosférica</h2>
-          <p class="text-body-muted">Implementación de normativas PDA y exigencias estrictas de ventilación pasiva en
-            aulas escolares públicas para mitigar el material particulado.</p>
+          <p class="text-body-muted">Implementación de normativas PDA y exigencias estrictas de ventilación pasiva en aulas escolares públicas para mitigar el material particulado.</p>
         </section>
 
-        <section class="timeline-trigger" data-era="eraPresente">
+        <!-- Era Presente: Aplica para todas (Conclusión) -->
+        <section class="timeline-trigger" data-era="eraPresente" data-category="infra salud escuela">
           <span class="timeline-era-label">2020 – Presente</span>
           <h2>Control de Aerosoles y CO₂</h2>
-          <p class="text-body-muted">Estándares modernos de ventilación cruzada activa, medición analítica de CO₂ en
-            tiempo real y secuenciación genómica avanzada por el ISP.</p>
+          <p class="text-body-muted">Estándares modernos de ventilación cruzada activa, medición analítica de CO₂ en tiempo real y secuenciación genómica avanzada por el ISP.</p>
         </section>
       </div>
 
@@ -143,9 +144,9 @@
       </aside>
 
       <!-- Columna Derecha: Canvas de Contenido -->
-      <div class="content-canvas">
-        <!-- Era 1990 -->
-        <section id="era90-detail" class="era-block" data-category="infra salud escuela">
+<div class="content-canvas">
+        <!-- Era 1990 (Filtro: Infraestructura) -->
+        <section id="era90-detail" class="era-block" data-category="infra">
           <h2>Contaminación intradomiciliaria y el Plan de Invierno</h2>
 
           <div class="content-split">
@@ -167,8 +168,8 @@
           </div>
         </section>
 
-        <!-- Era 2000 -->
-        <section id="era2000-detail" class="era-block" data-category="infra salud escuela">
+        <!-- Era 2000 (Filtro: Salud) -->
+        <section id="era2000-detail" class="era-block" data-category="salud">
           <h2>Normativa térmica y la prueba de fuego H1N1</h2>
 
           <div class="content-split">
@@ -187,8 +188,8 @@
           </div>
         </section>
 
-        <!-- Era 2010 -->
-        <section id="era2010-detail" class="era-block" data-category="infra salud escuela">
+        <!-- Era 2010 (Filtro: Escuela) -->
+        <section id="era2010-detail" class="era-block" data-category="escuela">
           <h2>Eficiencia energética y cobertura pediátrica</h2>
 
           <div class="content-split">
@@ -207,7 +208,7 @@
           </div>
         </section>
 
-        <!-- Era Presente -->
+        <!-- Era Presente (Filtro: Todos) -->
         <section id="eraPresente-detail" class="era-block" data-category="infra salud escuela">
           <h2>Métrica de CO₂, aerosoles y ventilación consciente</h2>
 
