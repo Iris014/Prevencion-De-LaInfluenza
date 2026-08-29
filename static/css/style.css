@@ -876,7 +876,6 @@ th {
   .timeline-sidebar { display: none; }
   .content-split { grid-template-columns: 1fr; }
   .timeline-cinematic-container { grid-template-columns: 1fr; }
-  .timeline-sticky-panel { display: none; }
 
   /* Mejora de aspect ratio en móvil para mejor uso del espacio vertical */
   .media-canvas {
