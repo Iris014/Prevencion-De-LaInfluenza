@@ -10,6 +10,7 @@
         initCategoryFilters(); // Filtros dinámicos
         initWebdevSidebar(); // Sidebar web.dev
         initQuiz(); // Cuestionario web.dev
+        initMetamorphicTimer();
     }
     if (page === "guia") {
         initMapNYTimes(); // Mapa interactivo NYTimes
@@ -19,7 +20,7 @@
         initQuizFlip(); // Trivia existente
         initMythForm();
     }
-    
+
     function initA11y() {
         const stored = JSON.parse(localStorage.getItem("chile-respira-a11y") || "{}");
         if (stored.contrast) html.classList.add("contrast");
@@ -52,7 +53,7 @@
             });
         });
     }
-    
+
     function toggleSpeech(btn) {
         if (!window.speechSynthesis) return;
         if (speechSynthesis.speaking) {
@@ -65,7 +66,7 @@
         speechSynthesis.speak(utter);
         btn.setAttribute("aria-pressed", "true");
     }
-    
+
     function initNav() {
         const toggle = document.querySelector(".nav-toggle");
         const nav = document.getElementById("nav-principal");
@@ -75,7 +76,7 @@
             toggle.setAttribute("aria-expanded", String(open));
         });
     }
-    
+
     function initTriage() {
         const modal = document.getElementById("modal-triaje");
         if (!modal) return;
@@ -108,7 +109,7 @@
             if (e.key === "Escape") modal.hidden = true;
         });
     }
-    
+
     function initAirCalc() {
         const form = document.getElementById("form-aire");
         const box = document.getElementById("aire-resultado");
@@ -132,25 +133,25 @@
                 " minutos cada hora, rendija de 5 cm en ventanas opuestas. Si hay vaho o CO₂ > 700 ppm, ventila de inmediato.";
         });
     }
-    
+
     // ==========================================
     // INJERTO: Timeline Storytelling Cinemático
     // ==========================================
     function initCinematicTimeline() {
         const triggers = document.querySelectorAll('.timeline-trigger');
         const mediaLayers = document.querySelectorAll('.media-layer');
-        
+
         if (triggers.length === 0 || mediaLayers.length === 0) return;
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     const era = entry.target.dataset.era;
-                    
+
                     // Activar trigger visual
                     triggers.forEach((t) => t.classList.remove('active'));
                     entry.target.classList.add('active');
-                    
+
                     // Cambiar capa multimedia
                     mediaLayers.forEach((layer) => {
                         layer.classList.remove('active');
@@ -167,38 +168,38 @@
                 }
             });
         }, { threshold: 0.5 });
-        
+
         triggers.forEach((trigger) => observer.observe(trigger));
     }
-    
-// ==========================================
+
+    // ==========================================
     // INJERTO: Filtros Dinámicos de Categoría
     // ==========================================
     function initCategoryFilters() {
         // Seleccionamos específicamente los botones de la barra de filtros
         const filterChips = document.querySelectorAll(".filter-bar .chip");
-        
+
         // Seleccionamos todos los elementos que deben reaccionar al filtro
         const eraBlocks = document.querySelectorAll(".era-block");
         const timelineTriggers = document.querySelectorAll(".timeline-trigger");
         const eraLinks = document.querySelectorAll(".era-link");
-        
+
         if (filterChips.length === 0) return;
 
         filterChips.forEach((chip) => {
             chip.addEventListener("click", () => {
                 const category = chip.dataset.category;
-                
+
                 // 1. Actualizar estado visual de los botones (chips)
                 filterChips.forEach((c) => c.classList.remove("is-on"));
                 chip.classList.add("is-on");
-                
+
                 // Función reutilizable para mostrar/ocultar elementos
                 const toggleVisibility = (elements) => {
                     elements.forEach((el) => {
                         // Soportar data-category o data-topic
                         const itemCategories = el.dataset.category || el.dataset.topic || "";
-                        
+
                         if (category === "all" || itemCategories.includes(category)) {
                             el.classList.remove("hidden");
                             el.style.display = ""; // Asegurar visibilidad
@@ -231,14 +232,14 @@
             });
         });
     }
-    
+
     // ==========================================
     // INJERTO: Sidebar web.dev con ScrollSync
     // ==========================================
     function initWebdevSidebar() {
         const eraLinks = document.querySelectorAll(".era-link");
         const eraBlocks = document.querySelectorAll(".era-block");
-        
+
         eraLinks.forEach((link) => {
             link.addEventListener("click", (e) => {
                 e.preventDefault();
@@ -249,7 +250,7 @@
                 }
             });
         });
-        
+
         // Sincronizar activación al scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
@@ -264,29 +265,29 @@
                 }
             });
         }, { threshold: 0.3 });
-        
+
         eraBlocks.forEach((block) => observer.observe(block));
     }
-    
+
     // ==========================================
     // INJERTO: Cuestionario web.dev
     // ==========================================
     function initQuiz() {
         const options = document.querySelectorAll(".quiz-option");
         const feedback = document.getElementById("quiz-feedback");
-        
+
         options.forEach((option) => {
             option.addEventListener("click", () => {
                 const isCorrect = option.dataset.correct === "true";
-                
+
                 // Limpiar clases previas
                 options.forEach((opt) => {
                     opt.classList.remove("correct", "incorrect");
                 });
-                
+
                 // Aplicar resultado
                 option.classList.add(isCorrect ? "correct" : "incorrect");
-                
+
                 // Mostrar feedback
                 feedback.classList.remove("hidden");
                 feedback.classList.remove("success", "error");
@@ -295,7 +296,7 @@
             });
         });
     }
-    
+
     // ==========================================
     // INJERTO: Mapa Interactivo NYTimes
     // ==========================================
@@ -337,7 +338,7 @@
             });
         }
     }
-    
+
     function initBudget() {
         const form = document.getElementById("form-presupuesto");
         const out = document.getElementById("presupuesto-resultado");
@@ -372,7 +373,7 @@
             }
         });
     }
-    
+
     function initQuizFlip() {
         const cards = [
             {
@@ -435,14 +436,14 @@
         const share = document.getElementById("share-wa");
         const cierre = document.getElementById("quiz-cierre");
         const scoreEl = document.getElementById("quiz-score");
-        
+
         function render() {
             cardEl.classList.remove("is-flipped");
             qEl.textContent = cards[i].q;
             prog.textContent = "Tarjeta " + (i + 1) + " de " + cards.length;
             bar.style.width = ((i / cards.length) * 100 || 20) + "%";
         }
-        
+
         function reveal(userTrue) {
             const ok = userTrue === cards[i].answer;
             if (ok) score += 1;
@@ -454,11 +455,11 @@
                 "https://wa.me/?text=" + encodeURIComponent(cards[i].share + " " + location.href);
             cardEl.classList.add("is-flipped");
         }
-        
+
         document.querySelectorAll("[data-answer]").forEach((btn) => {
             btn.addEventListener("click", () => reveal(btn.dataset.answer === "true"));
         });
-        
+
         next.addEventListener("click", () => {
             i += 1;
             if (i >= cards.length) {
@@ -478,7 +479,7 @@
             }
             render();
         });
-        
+
         document.getElementById("btn-certificado").addEventListener("click", () => {
             const canvas = document.getElementById("certificado");
             const ctx = canvas.getContext("2d");
@@ -498,10 +499,10 @@
             link.hidden = false;
             link.href = canvas.toDataURL("image/png");
         });
-        
+
         render();
     }
-    
+
     function initMythForm() {
         const form = document.getElementById("form-mitos");
         if (!form) return;
@@ -523,7 +524,7 @@
 (function () {
     const page = document.body.dataset.page;
     const html = document.documentElement;
-    
+
     initA11y();
     initNav();
     initTriage();
@@ -531,7 +532,7 @@
         initQuiz();
         initMythForm();
     }
-    
+
     function initA11y() {
         const stored = JSON.parse(localStorage.getItem("chile-respira-a11y") || "{}");
         if (stored.contrast) html.classList.add("contrast");
@@ -564,7 +565,7 @@
             });
         });
     }
-    
+
     function toggleSpeech(btn) {
         if (!window.speechSynthesis) return;
         if (speechSynthesis.speaking) {
@@ -577,7 +578,7 @@
         speechSynthesis.speak(utter);
         btn.setAttribute("aria-pressed", "true");
     }
-    
+
     function initNav() {
         const toggle = document.querySelector(".nav-toggle");
         const nav = document.getElementById("nav-principal");
@@ -587,7 +588,7 @@
             toggle.setAttribute("aria-expanded", String(open));
         });
     }
-    
+
     function initTriage() {
         const modal = document.getElementById("modal-triaje");
         if (!modal) return;
@@ -613,7 +614,7 @@
             if (e.key === "Escape") modal.hidden = true;
         });
     }
-    
+
     function initQuiz() {
         // Ejecuta la lógica interna del set de preguntas (Mitos vs Realidades)
     }
@@ -622,3 +623,56 @@
         // Controla la validación y el envío del formulario de rumores comunitarios
     }
 })();
+
+function initMetamorphicTimer() {
+    const INACTIVITY_LIMIT = 5000;
+    let idleTimer = null;
+    let hasTransformed = false;
+
+    // 1. Capturamos TODO el contenedor (Tarjeta de info + Tarjeta de imagen)
+    const cinematicContainer = document.querySelector('.timeline-cinematic-container');
+    if (!cinematicContainer) return;
+
+    const resetTimer = (e) => {
+        if (hasTransformed) return;
+
+        // 2. EXCEPCIÓN CORREGIDA: Si el mouse se mueve sobre la imagen O sobre el texto, el temporizador NO se reinicia.
+        if (e && cinematicContainer.contains(e.target)) {
+            return;
+        }
+
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(triggerMetamorphosis, INACTIVITY_LIMIT);
+    };
+
+    window.addEventListener('mousemove', resetTimer);
+    window.addEventListener('scroll', resetTimer, { passive: true });
+    window.addEventListener('keydown', resetTimer);
+    window.addEventListener('click', resetTimer);
+    window.addEventListener('touchstart', resetTimer, { passive: true });
+
+    resetTimer();
+
+    function triggerMetamorphosis() {
+        hasTransformed = true;
+
+        window.removeEventListener('mousemove', resetTimer);
+        window.removeEventListener('scroll', resetTimer);
+        window.removeEventListener('keydown', resetTimer);
+        window.removeEventListener('click', resetTimer);
+        window.removeEventListener('touchstart', resetTimer);
+
+        // 3. SELECCIÓN DINÁMICA: Buscamos la capa que el usuario está viendo actualmente, no solo la era 2000
+        const activeLayer = document.querySelector('.media-layer.active');
+        if (!activeLayer) return;
+
+        const video = activeLayer.querySelector('.video-metamorfosis');
+        
+        // Disparar el cambio de CSS
+        activeLayer.classList.add('is-metamorphosed');
+
+        if (video) {
+            video.play().catch(err => console.warn('Autoplay bloqueado por el navegador:', err));
+        }
+    }
+}

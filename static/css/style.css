@@ -978,3 +978,37 @@ main { max-width: 1120px; margin: 0 auto; padding: 0 1.25rem 5rem; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 :focus-visible { outline: 2px solid var(--tech-cyan); outline-offset: 3px; }
+
+/* ==========================================
+   INJERTO: Transformación Metamórfica
+   ========================================== */
+.media-layer .img-metamorfosis {
+  transition: opacity 1.5s var(--easing-cinematic);
+  opacity: 1;
+}
+
+.media-layer .video-metamorfosis {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  
+  /* Efecto Letterbox: Escala inteligente sin deformar */
+  object-fit: contain; 
+  background-color: #000; /* Franjas negras arriba y abajo */
+  
+  opacity: 0;
+  transition: opacity 1.5s var(--easing-cinematic);
+  z-index: 2;
+  pointer-events: none; /* Evita que bloquee clics antes de aparecer */
+}
+
+/* Estado metamorfoseado (activado por JS tras 2 minutos) */
+.media-layer.is-metamorphosed .img-metamorfosis {
+  opacity: 0;
+}
+
+.media-layer.is-metamorphosed .video-metamorfosis {
+  opacity: 1;
+  pointer-events: auto; /* Reactiva interacción con el video */
+}
