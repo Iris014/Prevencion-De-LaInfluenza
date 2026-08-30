@@ -1095,12 +1095,20 @@ main { max-width: 1120px; margin: 0 auto; padding: 0 1.25rem 5rem; }
 }
 
 /* Degrade oscuro para que el texto central sea legible siempre */
+/* Degrade oscuro para que el texto central sea legible siempre */
 .hero-overlay-content {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 2.5rem 1.5rem 1.5rem;
+  height: 100%; /* 1. Cambia a 100% para que ocupe todo el alto del contenedor padre */
+  
+  /* 2. Añade Flexbox para centrar verticalmente */
+  display: flex;
+  flex-direction: column;     /* Alinea los elementos (h3 y p) uno abajo del otro */
+  justify-content: center;    /* Centra el contenido verticalmente */
+  
+  padding: 1.5rem; /* 3. Iguala el padding superior e inferior para un centrado perfecto */
   background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0) 100%);
   z-index: 10;
   pointer-events: none;
@@ -1110,6 +1118,7 @@ main { max-width: 1120px; margin: 0 auto; padding: 0 1.25rem 5rem; }
 .hero-overlay-content p {
   color: #ffffff;
 }
+
 
 /* ==========================================
    🍱 BENTO GRID - GUÍA PRÁCTICA (Módulo A)
