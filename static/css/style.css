@@ -335,13 +335,9 @@ main {
   padding: var(--space-card);
 }
 
-.card:hover {
-  border-color: var(--tech-cyan);
-  background: var(--bg-surface-elevated);
-}
-
 .card-link {
   text-decoration: none;
+  color: inherit;
   display: block;
   transition: border-color 0.3s ease, background 0.3s ease;
 }
