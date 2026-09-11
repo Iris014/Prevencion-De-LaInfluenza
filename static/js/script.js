@@ -1,129 +1,152 @@
-(function () {
-    const page = document.body.dataset.page;
-    const html = document.documentElement;
+// ==========================================
+// CHILE RESPIRA - JavaScript con conceptos conocidos
+// Basado en: HTML5, CSS3, JavaScript básico
+// ==========================================
+
+// ==========================================
+// Variables y Datos Globales
+// ==========================================
+const html = document.documentElement;
+const body = document.body;
+const page = body.dataset.page;
+
+// Objeto literal para almacenar textos de accesibilidad
+const textosA11y = {
+    contrast: {
+        activo: "Modo alto contraste activado",
+        inactivo: "Modo alto contraste desactivado"
+    }
+};
+
+// Objeto literal para almacenar respuestas de triaje
+const respuestasTriaje = {
+    critico: '<p class="status-badge">Alerta</p><h3>Alerta crítica</h3><p>Acude de inmediato a SAPU, CESFAM u hospital más cercano.</p>',
+    moderado: "<h3>Sintomático moderado</h3><p>Reposo, hidratación, aislamiento preventivo y llama a Salud Responde 600 360 7777.</p>",
+    leve: "<h3>Control preventivo</h3><p>Mascarilla en público, lavado frecuente de manos y monitoreo de temperatura.</p>"
+};
+
+// Variables de estado
+let modoContraste = false;
+
+// ==========================================
+// Funciones de Accesibilidad
+// ==========================================
+function alternarContraste() {
+    modoContraste = !modoContraste;
+    if (modoContraste) {
+        html.classList.add("contrast");
+    } else {
+        html.classList.remove("contrast");
+    }
+    guardarPreferencias();
+}
+
+function guardarPreferencias() {
+    const preferencias = {
+        contrast: modoContraste,
+        dyslexia: modoDyslexia,
+        font: nivelFuente
+    };
+    localStorage.setItem("chile-respira-a11y", JSON.stringify(preferencias));
+}
+
+function cargarPreferencias() {
+    const guardadas = localStorage.getItem("chile-respira-a11y");
+    if (guardadas) {
+        const preferencias = JSON.parse(guardadas);
+        if (preferencias.contrast) {
+            modoContraste = true;
+            html.classList.add("contrast");
+        }
+        if (preferencias.dyslexia) {
+            modoDyslexia = true;
+            html.classList.add("dyslexia");
+        }
+        if (preferencias.font) {
+            nivelFuente = preferencias.font;
+            html.dataset.font = String(nivelFuente);
+        }
+    }
+}
+
+// ==========================================
+// Funciones de Navegación
+// ==========================================
+function alternarMenu() {
+    const nav = document.getElementById("nav-principal");
+    const toggle = document.querySelector(".nav-toggle");
+    if (nav && toggle) {
+        const estaAbierto = nav.classList.contains("is-open");
+        if (estaAbierto) {
+            nav.classList.remove("is-open");
+            toggle.setAttribute("aria-expanded", "false");
+        } else {
+            nav.classList.add("is-open");
+            toggle.setAttribute("aria-expanded", "true");
+        }
+    }
+}
+
+// ==========================================
+// Funciones de Modal (Triaje)
+// ==========================================
+function abrirModalTriaje() {
+    const modal = document.getElementById("modal-triaje");
+    if (modal) {
+        modal.hidden = false;
+    }
+}
+
+function cerrarModalTriaje() {
+    const modal = document.getElementById("modal-triaje");
+    if (modal) {
+        modal.hidden = true;
+    }
+}
+
+function mostrarResultadoTriaje(valor) {
+    const resultado = document.getElementById("triaje-resultado");
+    if (resultado && respuestasTriaje[valor]) {
+        resultado.innerHTML = respuestasTriaje[valor];
+        resultado.hidden = false;
+    }
+}
+
+// ==========================================
+// Funciones de Calculadora de Aire (Página Inicio)
+// ==========================================
+function calcularVentilacion(evento) {
+    evento.preventDefault();
     
-    // Inicializar componentes comunes
-    initA11y();
-    initNav();
-    initTriage();
+    const largo = Number(document.getElementById("largo").value);
+    const ancho = Number(document.getElementById("ancho").value);
+    const alto = Number(document.getElementById("alto").value);
+    const personas = Number(document.getElementById("personas").value);
     
-    // Inicializar componentes específicos por página
-    if (page === "inicio") initAirCalc();
-    if (page === "linea") {
-        initCinematicTimeline();
-        initCategoryFilters();
-        initWebdevSidebar();
-        initQuiz();
-        initMetamorphicTimer();
+    const volumen = largo * ancho * alto;
+    const volumenPorPersona = volumen / personas;
+    
+    let minutos = 5;
+    if (volumenPorPersona < 8) {
+        minutos = 8;
+    } else if (volumenPorPersona >= 12) {
+        minutos = 3;
     }
-    if (page === "guia") {
-        initMapNYTimes();
-        initBudget();
+    
+    const resultado = document.getElementById("aire-resultado");
+    const texto = document.getElementById("aire-texto");
+    
+    if (resultado && texto) {
+        texto.textContent = "Volumen aproximado: " + 
+            volumen.toFixed(1) + " m³ (" + 
+            volumenPorPersona.toFixed(1) + " m³ por persona). " +
+            "Microventilación cruzada: " + minutos + 
+            " minutos cada hora, rendija de 5 cm en ventanas opuestas. " +
+            "Si hay vaho o CO₂ > 700 ppm, ventila de inmediato.";
+        resultado.hidden = false;
     }
-    if (page === "mitos") {
-        initQuizFlip();
-        initMythForm();
-    }
+}
 
-    // ==========================================
-    // Funciones de Accesibilidad
-    // ==========================================
-    function initA11y() {
-        const stored = JSON.parse(localStorage.getItem("chile-respira-a11y") || "{}");
-        if (stored.contrast) html.classList.add("contrast");
-        if (stored.dyslexia) html.classList.add("dyslexia");
-        if (stored.font) html.dataset.font = stored.font;
-        
-        document.querySelectorAll("[data-a11y]").forEach((btn) => {
-            btn.addEventListener("click", () => {
-                const action = btn.dataset.a11y;
-                if (action === "contrast") html.classList.toggle("contrast");;
-                
-                localStorage.setItem(
-                    "chile-respira-a11y",
-                    JSON.stringify({
-                        contrast: html.classList.contains("contrast"),
-                    })
-                );
-            });
-        });
-    }
-
-    // ==========================================
-    // Funciones de Navegación
-    // ==========================================
-    function initNav() {
-        const toggle = document.querySelector(".nav-toggle");
-        const nav = document.getElementById("nav-principal");
-        if (!toggle || !nav) return;
-        toggle.addEventListener("click", () => {
-            const open = nav.classList.toggle("is-open");
-            toggle.setAttribute("aria-expanded", String(open));
-        });
-    }
-
-    // ==========================================
-    // Funciones de Triaje
-    // ==========================================
-    function initTriage() {
-        const modal = document.getElementById("modal-triaje");
-        if (!modal) return;
-        const result = document.getElementById("triaje-resultado");
-        const copy = {
-            critico:
-                '<p class="status-badge">Alerta</p><h3>Alerta crítica</h3><p>Acude de inmediato a SAPU, CESFAM u hospital más cercano.</p>',
-            moderado:
-                "<h3>Sintomático moderado</h3><p>Reposo, hidratación, aislamiento preventivo y llama a Salud Responde 600 360 7777.</p>",
-            leve:
-                "<h3>Control preventivo</h3><p>Mascarilla en público, lavado frecuente de manos y monitoreo de temperatura.</p>"
-        };
-        document.querySelectorAll("[data-open-triaje]").forEach((b) =>
-            b.addEventListener("click", () => {
-                modal.hidden = false;
-            })
-        );
-        modal.querySelectorAll("[data-close-modal]").forEach((b) =>
-            b.addEventListener("click", () => {
-                modal.hidden = true;
-            })
-        );
-        modal.querySelectorAll("input[name='triaje']").forEach((input) => {
-            input.addEventListener("change", () => {
-                result.hidden = false;
-                result.innerHTML = copy[input.value];
-            });
-        });
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") modal.hidden = true;
-        });
-    }
-
-    // ==========================================
-    // Calculadora de Aire (Página Inicio)
-    // ==========================================
-    function initAirCalc() {
-        const form = document.getElementById("form-aire");
-        const box = document.getElementById("aire-resultado");
-        const text = document.getElementById("aire-texto");
-        if (!form) return;
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const volume = Number(form.largo.value) * Number(form.ancho.value) * Number(form.alto.value);
-            const perPerson = volume / Number(form.personas.value);
-            let minutes = 5;
-            if (perPerson < 8) minutes = 8;
-            else if (perPerson >= 12) minutes = 3;
-            box.hidden = false;
-            text.textContent =
-                "Volumen aproximado: " +
-                volume.toFixed(1) +
-                " m³ (" +
-                perPerson.toFixed(1) +
-                " m³ por persona). Microventilación cruzada: " +
-                minutes +
-                " minutos cada hora, rendija de 5 cm en ventanas opuestas. Si hay vaho o CO₂ > 700 ppm, ventila de inmediato.";
-        });
-    }
 
     // ==========================================
     // Timeline Storytelling Cinemático
@@ -256,316 +279,390 @@
         eraBlocks.forEach((block) => observer.observe(block));
     }
 
-    // ==========================================
-    // Cuestionario web.dev
-    // ==========================================
-    function initQuiz() {
-        const options = document.querySelectorAll(".quiz-option");
-        const feedback = document.getElementById("quiz-feedback");
+// ==========================================
+// Funciones de Mapa Interactivo
+// ==========================================
+function mostrarTooltipMapa(evento, elemento) {
+    const tooltip = document.getElementById('nyt-live-tooltip');
+    if (!tooltip) return;
+    
+    const nombre = elemento.dataset.name;
+    const positividad = elemento.dataset.positivity;
+    const cobertura = elemento.dataset.cobertura;
+    
+    tooltip.classList.remove('hidden');
+    tooltip.style.left = (evento.offsetX + 15) + 'px';
+    tooltip.style.top = (evento.offsetY + 15) + 'px';
+    
+    tooltip.innerHTML = `
+        <div style="font-size: 10px; color: var(--tech-cyan); font-weight: bold; letter-spacing: 1px;">📡 BOLETÍN EPIDEMIOLÓGICO DEIS</div>
+        <div style="font-size: 14px; font-weight: bold; color: var(--text-title); margin: 4px 0 8px;">${nombre}</div>
+        <div style="display: flex; gap: 15px; border-top: 1px solid var(--tech-muted); padding-top: 6px;">
+            <div>
+                <span style="font-size: 10px; color: var(--text-muted); display: block;">POSITIVIDAD ISP</span>
+                <span style="font-size: 13px; font-weight: bold; color: var(--creative-coral);">${positividad}%</span>
+            </div>
+            <div>
+                <span style="font-size: 10px; color: var(--text-muted); display: block;">COBERTURA PNI</span>
+                <span style="font-size: 13px; font-weight: bold; color: var(--tech-cyan);">${cobertura}%</span>
+            </div>
+        </div>
+    `;
+}
 
-        options.forEach((option) => {
-            option.addEventListener("click", () => {
-                const isCorrect = option.dataset.correct === "true";
+function ocultarTooltipMapa() {
+    const tooltip = document.getElementById('nyt-live-tooltip');
+    if (tooltip) {
+        tooltip.classList.add('hidden');
+    }
+}
 
-                // Limpiar clases previas
-                options.forEach((opt) => {
-                    opt.classList.remove("correct", "incorrect");
-                });
+// ==========================================
+// Funciones de Calculadora Presupuestaria
+// ==========================================
+function calcularPresupuesto(evento) {
+    evento.preventDefault();
+    
+    const salas = Number(document.getElementById("salas").value);
+    const perfil = document.getElementById("perfil").value;
+    const resultado = document.getElementById("presupuesto-resultado");
+    
+    if (!resultado) return;
+    
+    resultado.hidden = false;
+    
+    if (perfil === "rural") {
+        resultado.innerHTML = "<h3>Kit rural para " + salas + 
+            " recintos</h3><p>Cloro: ~" + salas + 
+            " L/semana (10 mL/L, renovar cada 24 h). Deflectores de cartón: " + 
+            (salas * 2) + ". Costo referencial $0–$" + 
+            (salas * 500).toLocaleString("es-CL") + " CLP.</p>";
+    } else {
+        resultado.innerHTML = "<h3>Kit institucional para " + salas + 
+            " recintos</h3><p>1 sensor CO₂ y 1–2 deflectores por sala. Dispensadores: " + 
+            Math.ceil(salas / 2) + ". Inversión $" + 
+            (salas * 40000).toLocaleString("es-CL") + " – $" + 
+            (salas * 120000).toLocaleString("es-CL") + 
+            " CLP. Reducción estimada de carga viral hasta 85% con umbral 700 ppm.</p>";
+    }
+}
 
-                // Aplicar resultado
-                option.classList.add(isCorrect ? "correct" : "incorrect");
+// ==========================================
+// Funciones de Trivia Mitos vs Realidades
+// ==========================================
+const preguntasTrivia = [
+    {
+        pregunta: "La vacuna contra la Influenza me enferma o me produce una gripe fuerte.",
+        respuesta: false,
+        explicacion: "Las vacunas del PNI usan virus inactivados o fracciones proteicas que no se replican. Dolor local o febrícula es respuesta inmune, no la enfermedad.",
+        fuente: "SOCHINF / MINSAL",
+        accion: "Vacúnate cada año; la protección plena llega a las 2 semanas.",
+        compartir: "¿Sabías que la vacuna no te enferma? Son virus inactivados. Mira la explicación en Chile Respira."
+    },
+    {
+        pregunta: "Si tengo fiebre y dolor de cuerpo por Influenza, debo tomar antibióticos.",
+        respuesta: false,
+        explicacion: "La Influenza es viral. Los antibióticos no actúan sobre virus y generan resistencia bacteriana. Solo un médico indica antivirales en alto riesgo.",
+        fuente: "OPS/OMS / ISP",
+        accion: "Reposo, hidratación y analgésicos bajo indicación médica.",
+        compartir: "Los antibióticos no curan la Influenza. Es un virus, no una bacteria."
+    },
+    {
+        pregunta: "Si soy una persona joven y sana, no necesito vacunarme.",
+        respuesta: false,
+        explicacion: "Las personas jóvenes son vectores hacia lactantes, mayores y crónicos. En sanos puede haber neumonía y ausentismo laboral de más de 7 días.",
+        fuente: "CDC / DEIS Chile",
+        accion: "Si convives con grupos de riesgo, tu dosis protege a la comunidad.",
+        compartir: "Aunque seas joven y sano, la vacuna reduce la transmisión comunitaria."
+    },
+    {
+        pregunta: "El aire helado de la ventana es lo que produce el virus de la Influenza.",
+        respuesta: false,
+        explicacion: "El frío no genera patógenos. El contagio ocurre en espacios cerrados donde los aerosoles flotan horas. La ventilación cruzada puede reducir el contagio hasta un 80%.",
+        fuente: "MINVU / OMS",
+        accion: "Ventila a diario: el enemigo es el aire viciado, no el fresco.",
+        compartir: "El frío no causa Influenza. Cerrar todo concentra el virus en aerosoles."
+    },
+    {
+        pregunta: "La vacuna que me puse el año pasado me sirve para este invierno.",
+        respuesta: false,
+        explicacion: "El virus muta (variación antigénica). La OMS actualiza la fórmula cada año y los anticuerpos bajan a los 6–8 meses.",
+        fuente: "ISP / WHO",
+        accion: "Asiste cada año a un punto oficial de vacunación.",
+        compartir: "La vacuna de Influenza se actualiza cada año porque el virus muta."
+    }
+];
 
-                // Mostrar feedback
-                feedback.classList.remove("hidden");
-                feedback.classList.remove("success", "error");
-                feedback.classList.add(isCorrect ? "success" : "error");
-                feedback.textContent = isCorrect ? "¡Correcto! El Plan de Invierno se enfocó en mitigar la mortalidad infantil por neumonías e Influenza A." : "Vuelve a intentarlo. El Plan de Invierno no se centró en emisiones industriales ni vacunación masiva en esa época.";
+let indicePregunta = 0;
+let puntajeTrivia = 0;
+
+function renderizarPreguntaTrivia() {
+    const tarjeta = document.getElementById("quiz-card");
+    const textoPregunta = document.getElementById("mito-afirmacion");
+    const barraProgreso = document.getElementById("quiz-barra");
+    const textoProgreso = document.getElementById("quiz-progreso");
+    
+    if (!tarjeta || !textoPregunta || !barraProgreso || !textoProgreso) return;
+    
+    tarjeta.classList.remove("is-flipped");
+    textoPregunta.textContent = preguntasTrivia[indicePregunta].pregunta;
+    textoProgreso.textContent = "Tarjeta " + (indicePregunta + 1) + " de " + preguntasTrivia.length;
+    barraProgreso.style.width = ((indicePregunta / preguntasTrivia.length) * 100 || 20) + "%";
+}
+
+function revelarRespuestaTrivia(usuarioDijoVerdadero) {
+    const esCorrecto = usuarioDijoVerdadero === preguntasTrivia[indicePregunta].respuesta;
+    
+    if (esCorrecto) {
+        puntajeTrivia = puntajeTrivia + 1;
+    }
+    
+    const veredicto = document.getElementById("mito-veredicto");
+    const explicacion = document.getElementById("mito-explicacion");
+    const fuente = document.getElementById("mito-fuente");
+    const accion = document.getElementById("mito-accion");
+    const compartir = document.getElementById("share-wa");
+    const tarjeta = document.getElementById("quiz-card");
+    
+    if (veredicto) {
+        veredicto.textContent = esCorrecto ? "Correcto · FALSO" : "Incorrecto · FALSO";
+    }
+    if (explicacion) {
+        explicacion.textContent = preguntasTrivia[indicePregunta].explicacion;
+    }
+    if (fuente) {
+        fuente.textContent = "Fuente: " + preguntasTrivia[indicePregunta].fuente;
+    }
+    if (accion) {
+        accion.textContent = "Acción clave: " + preguntasTrivia[indicePregunta].accion;
+    }
+    if (compartir) {
+        compartir.href = "https://wa.me/?text=" + encodeURIComponent(preguntasTrivia[indicePregunta].compartir + " " + window.location.href);
+    }
+    if (tarjeta) {
+        tarjeta.classList.add("is-flipped");
+    }
+}
+
+function siguientePreguntaTrivia() {
+    indicePregunta = indicePregunta + 1;
+    
+    if (indicePregunta >= preguntasTrivia.length) {
+        finalizarTrivia();
+        return;
+    }
+    
+    renderizarPreguntaTrivia();
+}
+
+function finalizarTrivia() {
+    const tarjeta = document.getElementById("quiz-card");
+    const cierre = document.getElementById("quiz-cierre");
+    const barraProgreso = document.getElementById("quiz-barra");
+    const textoPuntaje = document.getElementById("quiz-score");
+    
+    if (tarjeta) tarjeta.hidden = true;
+    if (cierre) cierre.hidden = false;
+    if (barraProgreso) barraProgreso.style.width = "100%";
+    
+    if (textoPuntaje) {
+        let mensaje = "Acertaste " + puntajeTrivia + " de " + preguntasTrivia.length + ". ";
+        if (puntajeTrivia === 5) {
+            mensaje = mensaje + "Insignia Embajador de Aire Limpio desbloqueada.";
+        } else {
+            mensaje = mensaje + "Revisa las explicaciones y vuelve a intentar cuando quieras.";
+        }
+        textoPuntaje.textContent = mensaje;
+    }
+}
+
+function generarCertificado() {
+    const canvas = document.getElementById("certificado");
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext("2d");
+    canvas.hidden = false;
+    
+    ctx.fillStyle = "#0B0F19";
+    ctx.fillRect(0, 0, 900, 520);
+    
+    ctx.strokeStyle = "#38BDF8";
+    ctx.strokeRect(24, 24, 852, 472);
+    
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 32px Inter, sans-serif";
+    ctx.fillText("Embajador de Aire Limpio", 80, 180);
+    
+    ctx.font = "20px Inter, sans-serif";
+    ctx.fillStyle = "#E2E8F0";
+    ctx.fillText("Chile Respira · Trivia Mitos vs Realidades", 80, 230);
+    ctx.fillText("Puntaje: " + puntajeTrivia + " / 5 · " + new Date().toLocaleDateString("es-CL"), 80, 280);
+    
+    const enlace = document.getElementById("descargar-cert");
+    if (enlace) {
+        enlace.hidden = false;
+        enlace.href = canvas.toDataURL("image/png");
+    }
+}
+
+// ==========================================
+// Funciones de Formulario de Mitos
+// ==========================================
+function enviarFormularioMitos(evento) {
+    evento.preventDefault();
+    
+    const rumor = document.getElementById("rumor");
+    const mensaje = document.getElementById("form-mitos-msg");
+    
+    if (!rumor || !mensaje) return;
+    
+    if (rumor.value.trim().length < 12) {
+        mensaje.textContent = "Describe el mito con al menos 12 caracteres.";
+        rumor.focus();
+        return;
+    }
+    
+    mensaje.textContent = "Solicitud registrada en este dispositivo. El equipo publicará las dudas más frecuentes con evidencia.";
+    document.getElementById("form-mitos").reset();
+}
+
+// ==========================================
+// Inicialización
+// ==========================================
+function inicializarSitio() {
+    // Cargar preferencias guardadas
+    cargarPreferencias();
+    
+    // Configurar eventos de accesibilidad
+    const botonesA11y = document.querySelectorAll("[data-a11y]");
+    botonesA11y.forEach(function(boton) {
+        boton.addEventListener("click", function() {
+            const accion = boton.dataset.a11y;
+            if (accion === "contrast") alternarContraste();
+            if (accion === "dyslexia") alternarDyslexia();
+            if (accion === "font-up") aumentarFuente();
+            if (accion === "font-down") disminuirFuente();
+        });
+    });
+    
+    // Configurar toggle de navegación
+    const navToggle = document.querySelector(".nav-toggle");
+    if (navToggle) {
+        navToggle.addEventListener("click", alternarMenu);
+    }
+    
+    // Configurar modal de triaje
+    const botonesAbrirTriaje = document.querySelectorAll("[data-open-triaje]");
+    botonesAbrirTriaje.forEach(function(boton) {
+        boton.addEventListener("click", abrirModalTriaje);
+    });
+    
+    const botonesCerrarTriaje = document.querySelectorAll("[data-close-modal]");
+    botonesCerrarTriaje.forEach(function(boton) {
+        boton.addEventListener("click", cerrarModalTriaje);
+    });
+    
+    const opcionesTriaje = document.querySelectorAll("input[name='triaje']");
+    opcionesTriaje.forEach(function(opcion) {
+        opcion.addEventListener("change", function() {
+            mostrarResultadoTriaje(opcion.value);
+        });
+    });
+    
+    // Cerrar modal con Escape
+    document.addEventListener("keydown", function(evento) {
+        if (evento.key === "Escape") {
+            cerrarModalTriaje();
+        }
+    });
+    
+    // Inicializar componentes específicos por página
+    if (page === "inicio") {
+        const formAire = document.getElementById("form-aire");
+        if (formAire) {
+            formAire.addEventListener("submit", calcularVentilacion);
+        }
+    }
+    
+    if (page === "linea") {
+        // Configurar filtros de categoría
+        const chipsFiltro = document.querySelectorAll(".filter-bar .chip");
+        chipsFiltro.forEach(function(chip) {
+            chip.addEventListener("click", function() {
+                filtrarPorCategoria(chip.dataset.category);
+            });
+        });
+        
+        // Configurar enlaces de era
+        const enlacesEra = document.querySelectorAll(".era-link");
+        enlacesEra.forEach(function(enlace) {
+            enlace.addEventListener("click", function(evento) {
+                evento.preventDefault();
+                const targetId = enlace.getAttribute("href").substring(1);
+                navegarAEra(targetId);
+            });
+        });
+        
+        // Configurar cuestionario
+        const opcionesQuiz = document.querySelectorAll(".quiz-option");
+        opcionesQuiz.forEach(function(opcion) {
+            opcion.addEventListener("click", function() {
+                verificarRespuestaQuiz(opcion);
             });
         });
     }
-
-    // ==========================================
-    // Mapa Interactivo NYTimes
-    // ==========================================
-    function initMapNYTimes() {
-        const regions = document.querySelectorAll('.map-region-vector');
-        const nytTooltip = document.getElementById('nyt-live-tooltip');
-
-        if (regions.length > 0 && nytTooltip) {
-            regions.forEach(vector => {
-                vector.addEventListener('mousemove', (e) => {
-                    const name = vector.dataset.name;
-                    const positivity = vector.dataset.positivity;
-                    const cobertura = vector.dataset.cobertura;
-
-                    // Tooltip persigue al cursor
-                    nytTooltip.classList.remove('hidden');
-                    nytTooltip.style.left = `${e.offsetX + 15}px`;
-                    nytTooltip.style.top = `${e.offsetY + 15}px`;
-
-                    nytTooltip.innerHTML = `
-                        <div style="font-size: 10px; color: var(--tech-cyan); font-weight: bold; letter-spacing: 1px;">📡 BOLETÍN EPIDEMIOLÓGICO DEIS</div>
-                        <div style="font-size: 14px; font-weight: bold; color: var(--text-title); margin: 4px 0 8px;">${name}</div>
-                        <div style="display: flex; gap: 15px; border-top: 1px solid var(--tech-muted); padding-top: 6px;">
-                            <div>
-                                <span style="font-size: 10px; color: var(--text-muted); display: block;">POSITIVIDAD ISP</span>
-                                <span style="font-size: 13px; font-weight: bold; color: var(--creative-coral);">${positivity}%</span>
-                            </div>
-                            <div>
-                                <span style="font-size: 10px; color: var(--text-muted); display: block;">COBERTURA PNI</span>
-                                <span style="font-size: 13px; font-weight: bold; color: var(--tech-cyan);">${cobertura}%</span>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                vector.addEventListener('mouseleave', () => {
-                    nytTooltip.classList.add('hidden');
-                });
+    
+    if (page === "guia") {
+        // Configurar mapa interactivo
+        const regionesMapa = document.querySelectorAll('.map-region-vector');
+        regionesMapa.forEach(function(region) {
+            region.addEventListener('mousemove', function(evento) {
+                mostrarTooltipMapa(evento, region);
             });
+            region.addEventListener('mouseleave', ocultarTooltipMapa);
+        });
+        
+        // Configurar calculadora presupuestaria
+        const formPresupuesto = document.getElementById("form-presupuesto");
+        if (formPresupuesto) {
+            formPresupuesto.addEventListener("submit", calcularPresupuesto);
         }
     }
-
-    // ==========================================
-    // Calculadora Presupuestaria
-    // ==========================================
-    function initBudget() {
-        const form = document.getElementById("form-presupuesto");
-        const out = document.getElementById("presupuesto-resultado");
-        if (!form) return;
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const n = Number(document.getElementById("salas").value);
-            const perfil = document.getElementById("perfil").value;
-            out.hidden = false;
-            if (perfil === "rural") {
-                out.innerHTML =
-                    "<h3>Kit rural para " +
-                    n +
-                    " recintos</h3><p>Cloro: ~" +
-                    n +
-                    " L/semana (10 mL/L, renovar cada 24 h). Deflectores de cartón: " +
-                    n * 2 +
-                    ". Costo referencial $0–$" +
-                    (n * 500).toLocaleString("es-CL") +
-                    " CLP.</p>";
-            } else {
-                out.innerHTML =
-                    "<h3>Kit institucional para " +
-                    n +
-                    " recintos</h3><p>1 sensor CO₂ y 1–2 deflectores por sala. Dispensadores: " +
-                    Math.ceil(n / 2) +
-                    ". Inversión $" +
-                    (n * 40000).toLocaleString("es-CL") +
-                    " – $" +
-                    (n * 120000).toLocaleString("es-CL") +
-                    " CLP. Reducción estimada de carga viral hasta 85% con umbral 700 ppm.</p>";
-            }
+    
+    if (page === "mitos") {
+        // Configurar trivia
+        const botonesRespuesta = document.querySelectorAll("[data-answer]");
+        botonesRespuesta.forEach(function(boton) {
+            boton.addEventListener("click", function() {
+                const usuarioDijoVerdadero = boton.dataset.answer === "true";
+                revelarRespuestaTrivia(usuarioDijoVerdadero);
+            });
         });
-    }
-
-    // ==========================================
-    // Trivia Mitos vs Realidades
-    // ==========================================
-    function initQuizFlip() {
-        const cards = [
-            {
-                q: "La vacuna contra la Influenza me enferma o me produce una gripe fuerte.",
-                answer: false,
-                explain:
-                    "Las vacunas del PNI usan virus inactivados o fracciones proteicas que no se replican. Dolor local o febrícula es respuesta inmune, no la enfermedad.",
-                source: "SOCHINF / MINSAL",
-                action: "Vacúnate cada año; la protección plena llega a las 2 semanas.",
-                share: "¿Sabías que la vacuna no te enferma? Son virus inactivados. Mira la explicación en Chile Respira."
-            },
-            {
-                q: "Si tengo fiebre y dolor de cuerpo por Influenza, debo tomar antibióticos.",
-                answer: false,
-                explain:
-                    "La Influenza es viral. Los antibióticos no actúan sobre virus y generan resistencia bacteriana. Solo un médico indica antivirales en alto riesgo.",
-                source: "OPS/OMS / ISP",
-                action: "Reposo, hidratación y analgésicos bajo indicación médica.",
-                share: "Los antibióticos no curan la Influenza. Es un virus, no una bacteria."
-            },
-            {
-                q: "Si soy una persona joven y sana, no necesito vacunarme.",
-                answer: false,
-                explain:
-                    "Las personas jóvenes son vectores hacia lactantes, mayores y crónicos. En sanos puede haber neumonía y ausentismo laboral de más de 7 días.",
-                source: "CDC / DEIS Chile",
-                action: "Si convives con grupos de riesgo, tu dosis protege a la comunidad.",
-                share: "Aunque seas joven y sano, la vacuna reduce la transmisión comunitaria."
-            },
-            {
-                q: "El aire helado de la ventana es lo que produce el virus de la Influenza.",
-                answer: false,
-                explain:
-                    "El frío no genera patógenos. El contagio ocurre en espacios cerrados donde los aerosoles flotan horas. La ventilación cruzada puede reducir el contagio hasta un 80%.",
-                source: "MINVU / OMS",
-                action: "Ventila a diario: el enemigo es el aire viciado, no el fresco.",
-                share: "El frío no causa Influenza. Cerrar todo concentra el virus en aerosoles."
-            },
-            {
-                q: "La vacuna que me puse el año pasado me sirve para este invierno.",
-                answer: false,
-                explain:
-                    "El virus muta (variación antigénica). La OMS actualiza la fórmula cada año y los anticuerpos bajan a los 6–8 meses.",
-                source: "ISP / WHO",
-                action: "Asiste cada año a un punto oficial de vacunación.",
-                share: "La vacuna de Influenza se actualiza cada año porque el virus muta."
-            }
-        ];
-        let i = 0;
-        let score = 0;
-        const cardEl = document.getElementById("quiz-card");
-        const qEl = document.getElementById("mito-afirmacion");
-        const vEl = document.getElementById("mito-veredicto");
-        const eEl = document.getElementById("mito-explicacion");
-        const sEl = document.getElementById("mito-fuente");
-        const aEl = document.getElementById("mito-accion");
-        const bar = document.getElementById("quiz-barra");
-        const prog = document.getElementById("quiz-progreso");
-        const next = document.getElementById("quiz-siguiente");
-        const share = document.getElementById("share-wa");
-        const cierre = document.getElementById("quiz-cierre");
-        const scoreEl = document.getElementById("quiz-score");
-
-        function render() {
-            cardEl.classList.remove("is-flipped");
-            qEl.textContent = cards[i].q;
-            prog.textContent = "Tarjeta " + (i + 1) + " de " + cards.length;
-            bar.style.width = ((i / cards.length) * 100 || 20) + "%";
+        
+        const botonSiguiente = document.getElementById("quiz-siguiente");
+        if (botonSiguiente) {
+            botonSiguiente.addEventListener("click", siguientePreguntaTrivia);
         }
-
-        function reveal(userTrue) {
-            const ok = userTrue === cards[i].answer;
-            if (ok) score += 1;
-            vEl.textContent = ok ? "Correcto · FALSO" : "Incorrecto · FALSO";
-            eEl.textContent = cards[i].explain;
-            sEl.textContent = "Fuente: " + cards[i].source;
-            aEl.textContent = "Acción clave: " + cards[i].action;
-            share.href =
-                "https://wa.me/?text=" + encodeURIComponent(cards[i].share + " " + location.href);
-            cardEl.classList.add("is-flipped");
+        
+        const botonCertificado = document.getElementById("btn-certificado");
+        if (botonCertificado) {
+            botonCertificado.addEventListener("click", generarCertificado);
         }
-
-        document.querySelectorAll("[data-answer]").forEach((btn) => {
-            btn.addEventListener("click", () => reveal(btn.dataset.answer === "true"));
-        });
-
-        next.addEventListener("click", () => {
-            i += 1;
-            if (i >= cards.length) {
-                cardEl.hidden = true;
-                cierre.hidden = false;
-                bar.style.width = "100%";
-                scoreEl.textContent =
-                    "Acertaste " +
-                    score +
-                    " de " +
-                    cards.length +
-                    ". " +
-                    (score === 5
-                        ? "Insignia Embajador de Aire Limpio desbloqueada."
-                        : "Revisa las explicaciones y vuelve a intentar cuando quieras.");
-                return;
-            }
-            render();
-        });
-
-        document.getElementById("btn-certificado").addEventListener("click", () => {
-            const canvas = document.getElementById("certificado");
-            const ctx = canvas.getContext("2d");
-            canvas.hidden = false;
-            ctx.fillStyle = "#0B0F19";
-            ctx.fillRect(0, 0, 900, 520);
-            ctx.strokeStyle = "#38BDF8";
-            ctx.strokeRect(24, 24, 852, 472);
-            ctx.fillStyle = "#FFFFFF";
-            ctx.font = "bold 32px Inter, sans-serif";
-            ctx.fillText("Embajador de Aire Limpio", 80, 180);
-            ctx.font = "20px Inter, sans-serif";
-            ctx.fillStyle = "#E2E8F0";
-            ctx.fillText("Chile Respira · Trivia Mitos vs Realidades", 80, 230);
-            ctx.fillText("Puntaje: " + score + " / 5 · " + new Date().toLocaleDateString("es-CL"), 80, 280);
-            const link = document.getElementById("descargar-cert");
-            link.hidden = false;
-            link.href = canvas.toDataURL("image/png");
-        });
-
-        render();
-    }
-
-    // ==========================================
-    // Formulario de Mitos Comunitarios
-    // ==========================================
-    function initMythForm() {
-        const form = document.getElementById("form-mitos");
-        if (!form) return;
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const rumor = document.getElementById("rumor");
-            const msg = document.getElementById("form-mitos-msg");
-            if (rumor.value.trim().length < 12) {
-                msg.textContent = "Describe el mito con al menos 12 caracteres.";
-                rumor.focus();
-                return;
-            }
-            msg.textContent = "Solicitud registrada en este dispositivo. El equipo publicará las dudas más frecuentes con evidencia.";
-            form.reset();
-        });
-    }
-
-    // ==========================================
-    // Temporizador Metamórfico para Videos
-    // ==========================================
-    function initMetamorphicTimer() {
-        const INACTIVITY_LIMIT = 5000;
-        let idleTimer = null;
-        let hasTransformed = false;
-
-        const cinematicContainer = document.querySelector('.timeline-cinematic-container');
-        if (!cinematicContainer) return;
-
-        const resetTimer = (e) => {
-            if (hasTransformed) return;
-
-            // Si el mouse se mueve sobre el contenedor, no reiniciar
-            if (e && cinematicContainer.contains(e.target)) {
-                return;
-            }
-
-            clearTimeout(idleTimer);
-            idleTimer = setTimeout(triggerMetamorphosis, INACTIVITY_LIMIT);
-        };
-
-        window.addEventListener('mousemove', resetTimer);
-        window.addEventListener('scroll', resetTimer, { passive: true });
-        window.addEventListener('keydown', resetTimer);
-        window.addEventListener('click', resetTimer);
-        window.addEventListener('touchstart', resetTimer, { passive: true });
-
-        resetTimer();
-
-        function triggerMetamorphosis() {
-            hasTransformed = true;
-
-            window.removeEventListener('mousemove', resetTimer);
-            window.removeEventListener('scroll', resetTimer);
-            window.removeEventListener('keydown', resetTimer);
-            window.removeEventListener('click', resetTimer);
-            window.removeEventListener('touchstart', resetTimer);
-
-            const activeLayer = document.querySelector('.media-layer.active');
-            if (!activeLayer) return;
-
-            const video = activeLayer.querySelector('.video-metamorfosis');
-            
-            activeLayer.classList.add('is-metamorphosed');
-
-            if (video) {
-                video.play().catch(err => console.warn('Autoplay bloqueado por el navegador:', err));
-            }
+        
+        // Configurar formulario de mitos
+        const formMitos = document.getElementById("form-mitos");
+        if (formMitos) {
+            formMitos.addEventListener("submit", enviarFormularioMitos);
         }
+        
+        // Renderizar primera pregunta
+        renderizarPreguntaTrivia();
     }
-})();
+}
+
+// Ejecutar inicialización cuando el DOM esté listo
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", inicializarSitio);
+} else {
+    inicializarSitio();
+}
