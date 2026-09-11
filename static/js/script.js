@@ -1,72 +1,57 @@
 (function () {
     const page = document.body.dataset.page;
     const html = document.documentElement;
+    
+    // Inicializar componentes comunes
     initA11y();
     initNav();
     initTriage();
+    
+    // Inicializar componentes específicos por página
     if (page === "inicio") initAirCalc();
     if (page === "linea") {
-        initCinematicTimeline(); // Timeline storytelling
-        initCategoryFilters(); // Filtros dinámicos
-        initWebdevSidebar(); // Sidebar web.dev
-        initQuiz(); // Cuestionario web.dev
+        initCinematicTimeline();
+        initCategoryFilters();
+        initWebdevSidebar();
+        initQuiz();
         initMetamorphicTimer();
     }
     if (page === "guia") {
-        initMapNYTimes(); // Mapa interactivo NYTimes
+        initMapNYTimes();
         initBudget();
     }
     if (page === "mitos") {
-        initQuizFlip(); // Trivia existente
+        initQuizFlip();
         initMythForm();
     }
 
+    // ==========================================
+    // Funciones de Accesibilidad
+    // ==========================================
     function initA11y() {
         const stored = JSON.parse(localStorage.getItem("chile-respira-a11y") || "{}");
         if (stored.contrast) html.classList.add("contrast");
         if (stored.dyslexia) html.classList.add("dyslexia");
         if (stored.font) html.dataset.font = stored.font;
+        
         document.querySelectorAll("[data-a11y]").forEach((btn) => {
             btn.addEventListener("click", () => {
                 const action = btn.dataset.a11y;
-                if (action === "contrast") html.classList.toggle("contrast");
-                if (action === "dyslexia") {
-                    html.classList.toggle("dyslexia");
-                    btn.setAttribute("aria-pressed", String(html.classList.contains("dyslexia")));
-                }
-                if (action === "font-up") {
-                    html.dataset.font = String(Math.min(3, Number(html.dataset.font || 0) + 1));
-                }
-                if (action === "font-down") {
-                    const n = Math.max(0, Number(html.dataset.font || 0) - 1);
-                    html.dataset.font = n ? String(n) : "";
-                }
-                if (action === "speech") toggleSpeech(btn);
+                if (action === "contrast") html.classList.toggle("contrast");;
+                
                 localStorage.setItem(
                     "chile-respira-a11y",
                     JSON.stringify({
                         contrast: html.classList.contains("contrast"),
-                        dyslexia: html.classList.contains("dyslexia"),
-                        font: html.dataset.font || ""
                     })
                 );
             });
         });
     }
 
-    function toggleSpeech(btn) {
-        if (!window.speechSynthesis) return;
-        if (speechSynthesis.speaking) {
-            speechSynthesis.cancel();
-            btn.setAttribute("aria-pressed", "false");
-            return;
-        }
-        const utter = new SpeechSynthesisUtterance(document.querySelector("main").innerText.slice(0, 4000));
-        utter.lang = "es-CL";
-        speechSynthesis.speak(utter);
-        btn.setAttribute("aria-pressed", "true");
-    }
-
+    // ==========================================
+    // Funciones de Navegación
+    // ==========================================
     function initNav() {
         const toggle = document.querySelector(".nav-toggle");
         const nav = document.getElementById("nav-principal");
@@ -77,6 +62,9 @@
         });
     }
 
+    // ==========================================
+    // Funciones de Triaje
+    // ==========================================
     function initTriage() {
         const modal = document.getElementById("modal-triaje");
         if (!modal) return;
@@ -110,6 +98,9 @@
         });
     }
 
+    // ==========================================
+    // Calculadora de Aire (Página Inicio)
+    // ==========================================
     function initAirCalc() {
         const form = document.getElementById("form-aire");
         const box = document.getElementById("aire-resultado");
@@ -135,7 +126,7 @@
     }
 
     // ==========================================
-    // INJERTO: Timeline Storytelling Cinemático
+    // Timeline Storytelling Cinemático
     // ==========================================
     function initCinematicTimeline() {
         const triggers = document.querySelectorAll('.timeline-trigger');
@@ -173,13 +164,10 @@
     }
 
     // ==========================================
-    // INJERTO: Filtros Dinámicos de Categoría
+    // Filtros Dinámicos de Categoría
     // ==========================================
     function initCategoryFilters() {
-        // Seleccionamos específicamente los botones de la barra de filtros
         const filterChips = document.querySelectorAll(".filter-bar .chip");
-
-        // Seleccionamos todos los elementos que deben reaccionar al filtro
         const eraBlocks = document.querySelectorAll(".era-block");
         const timelineTriggers = document.querySelectorAll(".timeline-trigger");
         const eraLinks = document.querySelectorAll(".era-link");
@@ -190,33 +178,32 @@
             chip.addEventListener("click", () => {
                 const category = chip.dataset.category;
 
-                // 1. Actualizar estado visual de los botones (chips)
+                // Actualizar estado visual de los botones
                 filterChips.forEach((c) => c.classList.remove("is-on"));
                 chip.classList.add("is-on");
 
                 // Función reutilizable para mostrar/ocultar elementos
                 const toggleVisibility = (elements) => {
                     elements.forEach((el) => {
-                        // Soportar data-category o data-topic
                         const itemCategories = el.dataset.category || el.dataset.topic || "";
 
                         if (category === "all" || itemCategories.includes(category)) {
                             el.classList.remove("hidden");
-                            el.style.display = ""; // Asegurar visibilidad
+                            el.style.display = "";
                         } else {
                             el.classList.add("hidden");
-                            el.style.display = "none"; // Ocultar
+                            el.style.display = "none";
                         }
                     });
                 };
 
-                // 2. Filtrar la vista Cinemática (Triggers de la izquierda)
+                // Filtrar la vista Cinemática
                 toggleVisibility(timelineTriggers);
 
-                // 3. Filtrar la vista Web.dev (Bloques de lectura detallada)
+                // Filtrar la vista Web.dev
                 toggleVisibility(eraBlocks);
 
-                // 4. Sincronizar el menú lateral (Sidebar) para no mostrar enlaces a bloques ocultos
+                // Sincronizar el menú lateral
                 eraLinks.forEach((link) => {
                     const targetId = link.getAttribute("href").substring(1);
                     const targetBlock = document.getElementById(targetId);
@@ -234,7 +221,7 @@
     }
 
     // ==========================================
-    // INJERTO: Sidebar web.dev con ScrollSync
+    // Sidebar web.dev con ScrollSync
     // ==========================================
     function initWebdevSidebar() {
         const eraLinks = document.querySelectorAll(".era-link");
@@ -270,7 +257,7 @@
     }
 
     // ==========================================
-    // INJERTO: Cuestionario web.dev
+    // Cuestionario web.dev
     // ==========================================
     function initQuiz() {
         const options = document.querySelectorAll(".quiz-option");
@@ -298,7 +285,7 @@
     }
 
     // ==========================================
-    // INJERTO: Mapa Interactivo NYTimes
+    // Mapa Interactivo NYTimes
     // ==========================================
     function initMapNYTimes() {
         const regions = document.querySelectorAll('.map-region-vector');
@@ -311,7 +298,7 @@
                     const positivity = vector.dataset.positivity;
                     const cobertura = vector.dataset.cobertura;
 
-                    // Tooltip persigue al cursor con cálculo matemático
+                    // Tooltip persigue al cursor
                     nytTooltip.classList.remove('hidden');
                     nytTooltip.style.left = `${e.offsetX + 15}px`;
                     nytTooltip.style.top = `${e.offsetY + 15}px`;
@@ -339,6 +326,9 @@
         }
     }
 
+    // ==========================================
+    // Calculadora Presupuestaria
+    // ==========================================
     function initBudget() {
         const form = document.getElementById("form-presupuesto");
         const out = document.getElementById("presupuesto-resultado");
@@ -374,6 +364,9 @@
         });
     }
 
+    // ==========================================
+    // Trivia Mitos vs Realidades
+    // ==========================================
     function initQuizFlip() {
         const cards = [
             {
@@ -503,6 +496,9 @@
         render();
     }
 
+    // ==========================================
+    // Formulario de Mitos Comunitarios
+    // ==========================================
     function initMythForm() {
         const form = document.getElementById("form-mitos");
         if (!form) return;
@@ -519,160 +515,57 @@
             form.reset();
         });
     }
-})();
 
-(function () {
-    const page = document.body.dataset.page;
-    const html = document.documentElement;
+    // ==========================================
+    // Temporizador Metamórfico para Videos
+    // ==========================================
+    function initMetamorphicTimer() {
+        const INACTIVITY_LIMIT = 5000;
+        let idleTimer = null;
+        let hasTransformed = false;
 
-    initA11y();
-    initNav();
-    initTriage();
-    if (page === "mitos") {
-        initQuiz();
-        initMythForm();
-    }
+        const cinematicContainer = document.querySelector('.timeline-cinematic-container');
+        if (!cinematicContainer) return;
 
-    function initA11y() {
-        const stored = JSON.parse(localStorage.getItem("chile-respira-a11y") || "{}");
-        if (stored.contrast) html.classList.add("contrast");
-        if (stored.dyslexia) html.classList.add("dyslexia");
-        if (stored.font) html.dataset.font = stored.font;
-        document.querySelectorAll("[data-a11y]").forEach((btn) => {
-            btn.addEventListener("click", () => {
-                const action = btn.dataset.a11y;
-                if (action === "contrast") html.classList.toggle("contrast");
-                if (action === "dyslexia") {
-                    html.classList.toggle("dyslexia");
-                    btn.setAttribute("aria-pressed", String(html.classList.contains("dyslexia")));
-                }
-                if (action === "font-up") {
-                    html.dataset.font = String(Math.min(3, Number(html.dataset.font || 0) + 1));
-                }
-                if (action === "font-down") {
-                    const n = Math.max(0, Number(html.dataset.font || 0) - 1);
-                    html.dataset.font = n ? String(n) : "";
-                }
-                if (action === "speech") toggleSpeech(btn);
-                localStorage.setItem(
-                    "chile-respira-a11y",
-                    JSON.stringify({
-                        contrast: html.classList.contains("contrast"),
-                        dyslexia: html.classList.contains("dyslexia"),
-                        font: html.dataset.font || ""
-                    })
-                );
-            });
-        });
-    }
+        const resetTimer = (e) => {
+            if (hasTransformed) return;
 
-    function toggleSpeech(btn) {
-        if (!window.speechSynthesis) return;
-        if (speechSynthesis.speaking) {
-            speechSynthesis.cancel();
-            btn.setAttribute("aria-pressed", "false");
-            return;
-        }
-        const utter = new SpeechSynthesisUtterance(document.querySelector("main").innerText.slice(0, 4000));
-        utter.lang = "es-CL";
-        speechSynthesis.speak(utter);
-        btn.setAttribute("aria-pressed", "true");
-    }
+            // Si el mouse se mueve sobre el contenedor, no reiniciar
+            if (e && cinematicContainer.contains(e.target)) {
+                return;
+            }
 
-    function initNav() {
-        const toggle = document.querySelector(".nav-toggle");
-        const nav = document.getElementById("nav-principal");
-        if (!toggle || !nav) return;
-        toggle.addEventListener("click", () => {
-            const open = nav.classList.toggle("is-open");
-            toggle.setAttribute("aria-expanded", String(open));
-        });
-    }
-
-    function initTriage() {
-        const modal = document.getElementById("modal-triaje");
-        if (!modal) return;
-        const result = document.getElementById("triaje-resultado");
-        const copy = {
-            critico: '<p class="status-badge">Alerta</p><h3>Alerta crítica</h3><p>Acude de inmediato a SAPU, CESFAM u hospital más cercano.</p>',
-            moderado: "<h3>Sintomático moderado</h3><p>Reposo, hidratación, aislamiento preventivo y llama a Salud Responde 600 360 7777.</p>",
-            leve: "<h3>Control preventivo</h3><p>Mascarilla en público, lavado frecuente de manos y monitoreo de temperatura.</p>"
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(triggerMetamorphosis, INACTIVITY_LIMIT);
         };
-        document.querySelectorAll("[data-open-triaje]").forEach((b) =>
-            b.addEventListener("click", () => { modal.hidden = false; })
-        );
-        modal.querySelectorAll("[data-close-modal]").forEach((b) =>
-            b.addEventListener("click", () => { modal.hidden = true; })
-        );
-        modal.querySelectorAll("input[name='triaje']").forEach((input) => {
-            input.addEventListener("change", () => {
-                result.hidden = false;
-                result.innerHTML = copy[input.value];
-            });
-        });
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") modal.hidden = true;
-        });
-    }
 
-    function initQuiz() {
-        // Ejecuta la lógica interna del set de preguntas (Mitos vs Realidades)
-    }
+        window.addEventListener('mousemove', resetTimer);
+        window.addEventListener('scroll', resetTimer, { passive: true });
+        window.addEventListener('keydown', resetTimer);
+        window.addEventListener('click', resetTimer);
+        window.addEventListener('touchstart', resetTimer, { passive: true });
 
-    function initMythForm() {
-        // Controla la validación y el envío del formulario de rumores comunitarios
+        resetTimer();
+
+        function triggerMetamorphosis() {
+            hasTransformed = true;
+
+            window.removeEventListener('mousemove', resetTimer);
+            window.removeEventListener('scroll', resetTimer);
+            window.removeEventListener('keydown', resetTimer);
+            window.removeEventListener('click', resetTimer);
+            window.removeEventListener('touchstart', resetTimer);
+
+            const activeLayer = document.querySelector('.media-layer.active');
+            if (!activeLayer) return;
+
+            const video = activeLayer.querySelector('.video-metamorfosis');
+            
+            activeLayer.classList.add('is-metamorphosed');
+
+            if (video) {
+                video.play().catch(err => console.warn('Autoplay bloqueado por el navegador:', err));
+            }
+        }
     }
 })();
-
-function initMetamorphicTimer() {
-    const INACTIVITY_LIMIT = 5000;
-    let idleTimer = null;
-    let hasTransformed = false;
-
-    // 1. Capturamos TODO el contenedor (Tarjeta de info + Tarjeta de imagen)
-    const cinematicContainer = document.querySelector('.timeline-cinematic-container');
-    if (!cinematicContainer) return;
-
-    const resetTimer = (e) => {
-        if (hasTransformed) return;
-
-        // 2. EXCEPCIÓN CORREGIDA: Si el mouse se mueve sobre la imagen O sobre el texto, el temporizador NO se reinicia.
-        if (e && cinematicContainer.contains(e.target)) {
-            return;
-        }
-
-        clearTimeout(idleTimer);
-        idleTimer = setTimeout(triggerMetamorphosis, INACTIVITY_LIMIT);
-    };
-
-    window.addEventListener('mousemove', resetTimer);
-    window.addEventListener('scroll', resetTimer, { passive: true });
-    window.addEventListener('keydown', resetTimer);
-    window.addEventListener('click', resetTimer);
-    window.addEventListener('touchstart', resetTimer, { passive: true });
-
-    resetTimer();
-
-    function triggerMetamorphosis() {
-        hasTransformed = true;
-
-        window.removeEventListener('mousemove', resetTimer);
-        window.removeEventListener('scroll', resetTimer);
-        window.removeEventListener('keydown', resetTimer);
-        window.removeEventListener('click', resetTimer);
-        window.removeEventListener('touchstart', resetTimer);
-
-        // 3. SELECCIÓN DINÁMICA: Buscamos la capa que el usuario está viendo actualmente, no solo la era 2000
-        const activeLayer = document.querySelector('.media-layer.active');
-        if (!activeLayer) return;
-
-        const video = activeLayer.querySelector('.video-metamorfosis');
-        
-        // Disparar el cambio de CSS
-        activeLayer.classList.add('is-metamorphosed');
-
-        if (video) {
-            video.play().catch(err => console.warn('Autoplay bloqueado por el navegador:', err));
-        }
-    }
-}

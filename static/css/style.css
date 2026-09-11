@@ -895,7 +895,279 @@ th {
   outline-offset: 3px;
 }
 
+/* ==========================================
+   ESTILOS PARA QUIZ FLIP CARD
+   ========================================== */
+.quiz-wrap {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
 
+.progress-track {
+  height: 4px;
+  background: var(--bg-surface);
+  border-radius: 2px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--creative-violet), var(--creative-coral));
+  transition: width 0.3s ease;
+  width: 20%;
+}
+
+.progress-label {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.flip-card {
+  perspective: 1000px;
+  min-height: 320px;
+}
+
+.flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flip-card.is-flipped .flip-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.flip-back {
+  transform: rotateY(180deg);
+}
+
+.veredicto {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--tech-cyan);
+}
+
+.quiz-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+/* ==========================================
+   ESTILOS PARA ACCORDION
+   ========================================== */
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.accordion details {
+  background: var(--bg-surface);
+  border: 1px solid var(--tech-muted);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.accordion details:hover {
+  border-color: var(--tech-cyan);
+}
+
+.accordion summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-title);
+  list-style: none;
+  position: relative;
+  padding-right: 1.5rem;
+}
+
+.accordion summary::after {
+  content: '+';
+  position: absolute;
+  right: 0;
+  font-size: 1.25rem;
+  color: var(--tech-cyan);
+  transition: transform 0.3s ease;
+}
+
+.accordion details[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.accordion details p {
+  margin-top: 0.75rem;
+  color: var(--text-body);
+}
+
+/* ==========================================
+   ESTILOS PARA BENTO GRID
+   ========================================== */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto auto;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.bento-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--tech-muted);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.bento-small {
+  grid-column: span 1;
+}
+
+.bento-media {
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-col1-row1 {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.bento-col1-row2 {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.bento-col2-full {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+.bento-col3-row1 {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.bento-col3-row2 {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.bento-col4-full {
+  grid-column: 4;
+  grid-row: 1 / span 2;
+}
+
+.bento-hero {
+  border-color: var(--creative-violet);
+}
+
+.img-fija {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.5s ease;
+}
+
+.img-metamorfosis {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.5s ease;
+}
+
+.hero-overlay-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(11, 15, 25, 0.9));
+  padding: 1.5rem;
+  z-index: 2;
+}
+
+/* ==========================================
+   ESTILOS ADICIONALES PARA VIDEOS
+   ========================================== */
+.video-metamorfosis {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+
+.media-layer.is-metamorphosed .video-metamorfosis {
+  opacity: 1;
+}
+
+.media-layer.is-metamorphosed .img-fixa,
+.media-layer.is-metamorphosed .img-metamorfosis {
+  opacity: 0;
+}
+
+/* ==========================================
+   MEDIA QUERIES PARA BENTO GRID
+   ========================================== */
+@media (max-width: 900px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .bento-col1-row1,
+  .bento-col1-row2,
+  .bento-col3-row1,
+  .bento-col3-row2 {
+    grid-column: span 1;
+  }
+  
+  .bento-col2-full,
+  .bento-col4-full {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .bento-card {
+    grid-column: span 1 !important;
+    grid-row: auto !important;
+  }
+}
+
+/* ==========================================
+   ESTILOS REPETIDOS ELIMINADOS
+   ========================================== */
 html.dyslexia { --font: Lexend, Inter, sans-serif; }
 html.contrast { --bg-main: #000000; --bg-surface: #0a0a0a; --text-body: #FFFFFF; --text-muted: #E2E8F0; }
 html[data-font="1"] { font-size: 106%; }
