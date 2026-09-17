@@ -4,33 +4,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description"
-    content="Línea de tiempo 1990-2026: aire intradomiciliario, OGUC, PNI, PDA y medición de CO2 en Chile.">
   <title>Evolución del aire en Chile | Chile Respira</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@400;600;700&display=swap"
-    rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
-  <script src="../js/script.js" defer></script>
 </head>
 
 <body data-page="linea">
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
-  <div class="a11y-bar" role="region" aria-label="Accesibilidad e inclusión">
+  <div class="a11y-bar">
     <button type="button" class="a11y-btn" data-a11y="contrast">Modo alto contraste</button>
   </div>
   <header class="site-header">
     <div class="header-inner">
       <a class="brand" href="../../index.html">
-        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-mark"></span>
         <span class="brand-text">Chile Respira</span>
       </a>
-      <button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-principal">Menú</button>
-      <nav id="nav-principal" class="site-nav" aria-label="Principal">
+      <button type="button" class="nav-toggle">Menú</button>
+      <nav id="nav-principal" class="site-nav">
         <a href="../../index.html">Inicio</a>
-        <a href="linea-tiempo.html" aria-current="page">Línea de tiempo</a>
+        <a href="linea-tiempo.html" class="activo">Línea de tiempo</a>
         <a href="guia-practica.html">Guía práctica</a>
         <a href="mitos-realidades.html">Mitos vs realidades</a>
       </nav>
@@ -45,19 +37,15 @@
         control de la Influenza (1990 – 2026).</p>
     </section>
 
-    <div class="filter-bar" role="toolbar" aria-label="Filtros temáticos">
+    <div class="filter-bar">
       <button type="button" class="chip is-on" data-category="all">Ver todo</button>
       <button type="button" class="chip" data-category="infra">Infraestructura y vivienda</button>
       <button type="button" class="chip" data-category="salud">Salud pública y vacunas</button>
       <button type="button" class="chip" data-category="escuela">Políticas escolares</button>
     </div>
 
-    <!-- PRIMERA PARTE: Scrollytelling Cinemático Minimalista -->
     <div class="timeline-cinematic-container">
-      <!-- Columna Izquierda: Flujo Tipográfico Centrado -->
-      <!-- Columna Izquierda: Flujo Tipográfico Centrado (Cinemático) -->
       <div class="timeline-scroller">
-        <!-- Era 90: Infraestructura -->
         <section class="timeline-trigger" data-era="era90" data-category="infra">
           <span class="timeline-era-label">1990 – 1999</span>
           <h2>Contaminación intradomiciliaria y el Plan de Invierno</h2>
@@ -65,7 +53,6 @@
             fiscal en Chile, combatiendo la contaminación de estufas a parafina de mecha.</p>
         </section>
 
-        <!-- Era 2000: Salud -->
         <section class="timeline-trigger" data-era="era2000" data-category="salud">
           <span class="timeline-era-label">2000 – 2009</span>
           <h2>Pandemia A (H1N1)</h2>
@@ -73,7 +60,6 @@
             estratégico Oseltamivir frente al brote virológico global.</p>
         </section>
 
-        <!-- Era 2010: Escuela -->
         <section class="timeline-trigger" data-era="era2010" data-category="escuela">
           <span class="timeline-era-label">2010 – 2019</span>
           <h2>Plan de Descontaminación Atmosférica</h2>
@@ -81,7 +67,6 @@
             aulas escolares públicas para mitigar el material particulado.</p>
         </section>
 
-        <!-- Era Presente: Aplica para todas (Conclusión) -->
         <section class="timeline-trigger" data-era="eraPresente" data-category="infra salud escuela">
           <span class="timeline-era-label">2020 – Presente</span>
           <h2>Control de Aerosoles y CO₂</h2>
@@ -90,53 +75,41 @@
         </section>
       </div>
 
-      <!-- Columna Derecha: Panel Multimedia Mediano -->
       <div class="timeline-sticky-panel">
         <div class="media-canvas">
-          <!-- Recurso Era 90 -->
           <div id="media-era90" class="media-layer">
             <img
               src="../images/infraestructura mineduc/resultado-concurso-ideas-sistema-modular-nuevos-espacios-educativos.png"
               alt="Aulas Años 90" class="institutional-asset" loading="lazy">
-            <!-- Video interactivo (9:16) oculto por defecto -->
-            <video src="../videos/Gobierno Informa Campaña de Invierno - Gobierno de Chile (720p, h264).mp4" class="video-metamorfosis" loop muted playsinline
-              preload="auto"></video>
+            <video src="../videos/Gobierno Informa Campaña de Invierno - Gobierno de Chile (720p, h264).mp4"
+              class="video-metamorfosis" loop muted playsinline preload="auto"></video>
           </div>
-          <!-- Recurso Era 2000 (Video Demostrativo Optimizado) -->
           <div id="media-era2000" class="media-layer">
             <img src="../images/reformas minvu/RC_ReglamentacionTermica_1.png" alt="Aulas Años 90"
               class="institutional-asset" loading="lazy">
-            <!-- Video interactivo (9:16) oculto por defecto -->
-            <video src="../videos/Cinco exigencias nueva reglamentación térmica en Chile. - Arq. Celso Monsalve F Arquitectura Sustentable (720p, h264) (1).mp4" class="video-metamorfosis" loop muted playsinline
-              preload="auto"></video>
-
+            <video
+              src="../videos/Cinco exigencias nueva reglamentación térmica en Chile. - Arq. Celso Monsalve F Arquitectura Sustentable (720p, h264) (1).mp4"
+              class="video-metamorfosis" loop muted playsinline preload="auto"></video>
           </div>
-          <!-- Recurso Era 2010 -->
           <div id="media-era2010" class="media-layer">
             <img src="../images/salud minsal/Diseno-sin-titulo-11.png" alt="Aulas Años 90" class="institutional-asset"
               loading="lazy">
-            <!-- Video interactivo (9:16) oculto por defecto -->
-            <video src="../videos/Gobierno Informa Campaña de Invierno - Gobierno de Chile (720p, h264).mp4" class="video-metamorfosis" loop muted playsinline
-              preload="auto"></video>
-
+            <video src="../videos/Gobierno Informa Campaña de Invierno - Gobierno de Chile (720p, h264).mp4"
+              class="video-metamorfosis" loop muted playsinline preload="auto"></video>
           </div>
-          <!-- Recurso Era Presente -->
           <div id="media-eraPresente" class="media-layer">
             <img src="../images/planes mma/MROJASMAISA-1280x936.jpeg" alt="Aulas Años 90" class="institutional-asset"
               loading="lazy">
-            <!-- Video interactivo (9:16) oculto por defecto -->
-            <video src="../videos/Aire puro para todos el plan de descontaminación atmosférica de la capital chilena - DW Español (720p, h264) (1).mp4" class="video-metamorfosis" loop muted playsinline
-              preload="auto"></video>
-
+            <video
+              src="../videos/Aire puro para todos el plan de descontaminación atmosférica de la capital chilena - DW Español (720p, h264) (1).mp4"
+              class="video-metamorfosis" loop muted playsinline preload="auto"></video>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SEGUNDA PARTE: Estructura Bifásica web.dev (Reemplaza tabla de correlación) -->
     <div class="webdev-layout">
-      <!-- Columna Izquierda: Sidebar de Navegación Fijo -->
-      <aside class="timeline-sidebar" aria-label="Navegación por era">
+      <div class="timeline-sidebar">
         <nav class="era-nav">
           <a href="#era90-detail" class="era-link active" data-era="era90-detail">
             <span class="era-year">1990–1999</span>
@@ -155,11 +128,9 @@
             <span class="era-title">Control de Aerosoles</span>
           </a>
         </nav>
-      </aside>
+      </div>
 
-      <!-- Columna Derecha: Canvas de Contenido -->
       <div class="content-canvas">
-        <!-- Era 1990 (Filtro: Infraestructura) -->
         <section id="era90-detail" class="era-block" data-category="infra">
           <h2>Contaminación intradomiciliaria y el Plan de Invierno</h2>
 
@@ -182,7 +153,6 @@
           </div>
         </section>
 
-        <!-- Era 2000 (Filtro: Salud) -->
         <section id="era2000-detail" class="era-block" data-category="salud">
           <h2>Normativa térmica y la prueba de fuego H1N1</h2>
 
@@ -202,7 +172,6 @@
           </div>
         </section>
 
-        <!-- Era 2010 (Filtro: Escuela) -->
         <section id="era2010-detail" class="era-block" data-category="escuela">
           <h2>Eficiencia energética y cobertura pediátrica</h2>
 
@@ -222,7 +191,6 @@
           </div>
         </section>
 
-        <!-- Era Presente (Filtro: Todos) -->
         <section id="eraPresente-detail" class="era-block" data-category="infra salud escuela">
           <h2>Métrica de CO₂, aerosoles y ventilación consciente</h2>
 
@@ -245,8 +213,7 @@
 
       </div>
     </div>
-    <!-- Módulo Cuestionario (web.dev style) -->
-    <section class="quiz-module" aria-labelledby="quiz-titulo">
+    <section class="quiz-module">
       <header class="section-head">
         <p class="eyebrow">Verifica tu comprensión</p>
         <h2 id="quiz-titulo">Cuestionario interactivo</h2>
@@ -259,40 +226,57 @@
           <button class="quiz-option" data-correct="true">Mitigación de mortalidad infantil por neumonías</button>
           <button class="quiz-option" data-correct="false">Implementación de vacunación masiva</button>
         </div>
-        <div class="quiz-feedback hidden" id="quiz-feedback"></div>
+        <div class="quiz-feedback .is-hidden" id="quiz-feedback"></div>
       </div>
     </section>
   </main>
 
-  <button type="button" class="fab-triaje" data-open-triaje aria-haspopup="dialog">¿Tienes síntomas hoy?</button>
-  <div class="modal" id="modal-triaje" hidden>
+  <button type="button" class="fab-triaje" data-open-triaje>¿Tienes síntomas hoy?</button>
+  <div class="modal is-hidden" id="modal-triaje">
     <div class="modal-backdrop" data-close-modal></div>
-    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="triaje-titulo">
-      <button type="button" class="modal-close" data-close-modal aria-label="Cerrar">×</button>
+    <div class="modal-panel">
+      <button type="button" class="modal-close" data-close-modal>×</button>
       <h2 id="triaje-titulo">Triaje rápido de orientación</h2>
       <p>No sustituye atención médica. Salud Responde 600 360 7777.</p>
-      <fieldset class="triaje-options">
-        <legend>Selecciona lo que mejor describe tu situación</legend>
+
+      <div class="triaje-options">
+        <p class="triaje-legend">Selecciona lo que mejor describe tu situación</p>
         <label><input type="radio" name="triaje" value="critico"> Dificultad para respirar, tiraje intercostal o labios
           azulados</label>
         <label><input type="radio" name="triaje" value="moderado"> Fiebre &gt;38,5 °C + tos o dolor muscular</label>
         <label><input type="radio" name="triaje" value="leve"> Molestias leves sin fiebre</label>
-      </fieldset>
-      <div id="triaje-resultado" class="card card-tech" hidden></div>
+      </div>
+
+      <div id="triaje-resultado" class="card card-tech is-hidden">
+        <div id="msg-critico" class="triaje-msg is-hidden">
+          <p class="status-badge">Alerta</p>
+          <h3>Alerta crítica</h3>
+          <p>Acude de inmediato a SAPU, CESFAM u hospital más cercano.</p>
+        </div>
+        <div id="msg-moderado" class="triaje-msg is-hidden">
+          <h3>Sintomático moderado</h3>
+          <p>Reposo, hidratación, aislamiento preventivo y llama a Salud Responde 600 360 7777.</p>
+        </div>
+        <div id="msg-leve" class="triaje-msg is-hidden">
+          <h3>Control preventivo</h3>
+          <p>Mascarilla en público, lavado frecuente de manos y monitoreo de temperatura.</p>
+        </div>
+      </div>
     </div>
   </div>
 
   <footer class="site-footer">
     <div class="footer-inner">
       <p><strong>Chile Respira:</strong> Infraestructura e Higiene (1990 – Hoy)</p>
-      <ul class="footer-links">
-        <li><a href="https://www.minvu.gob.cl" rel="noopener noreferrer" target="_blank">MINVU</a></li>
-        <li><a href="https://www.minsal.cl" rel="noopener noreferrer" target="_blank">MINSAL</a></li>
-        <li><a href="https://www.mineduc.cl" rel="noopener noreferrer" target="_blank">Mineduc</a></li>
-        <li><a href="https://www.mma.gob.cl" rel="noopener noreferrer" target="_blank">MMA</a></li>
-      </ul>
+      <div class="footer-links">
+        <a href="https://www.minsal.cl" rel="noopener noreferrer" target="_blank">MINSAL</a>
+        <a href="https://www.ispch.cl" rel="noopener noreferrer" target="_blank">ISP</a>
+        <a href="https://deis.minsal.cl" rel="noopener noreferrer" target="_blank">DEIS</a>
+        <a href="https://www.paho.org" rel="noopener noreferrer" target="_blank">OPS</a>
+      </div>
     </div>
   </footer>
+  <script src="../js/script.js" defer></script>
 </body>
 
 </html>
